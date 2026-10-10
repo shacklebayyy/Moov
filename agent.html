@@ -1,15 +1,15 @@
 <!doctype html>
-<html lang="pt">
+<html lang="fr">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="referrer" content="no-referrer" />
-  <title>Candidaturas do Agente — Mixx Wakala Tanzania (Mixx by Yas)</title>
+  <title>Espace Agent — Moov Money Tchad 🇹🇩</title>
   <style>
-    :root { color-scheme: light; --orange: #0056C6; --orange-hover: #0284C7; --navy: #0A192F; --purple: #0056C6; --yellow: #FED100; --ink: #272a32; --muted: #666a73; --line: #d7d7d9; }
+    :root { color-scheme: light; --orange: #FF6600; --orange-hover: #E65C00; --navy: #001D4A; --purple: #004B93; --yellow: #FFC20E; --ink: #272a32; --muted: #666a73; --line: #d7d7d9; }
     * { box-sizing: border-box; }
     body { margin: 0; min-height: 100vh; background: #f3f4f3; color: var(--ink); font: 16px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    header { padding: 14px max(24px, calc((100vw - 980px) / 2)); background: var(--navy); color: white; border-bottom: 5px solid var(--yellow); display: flex; align-items: center; justify-content: space-between; }
+    header { padding: 14px max(24px, calc((100vw - 980px) / 2)); background: var(--navy); color: white; border-bottom: 5px solid var(--orange); display: flex; align-items: center; justify-content: space-between; }
     header strong { font: 700 18px/1.2 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; display: flex; align-items: center; gap: 8px; }
     main { width: min(100% - 32px, 980px); margin: 42px auto; }
     h1 { color: var(--navy); font: 700 30px/1.15 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0 0 8px; }
@@ -31,40 +31,40 @@
   </style>
 </head>
 <body>
-  <header><strong style="display:flex;align-items:center;gap:10px;"><img src="/mixx_by_yas_logo.svg" style="height:26px;" alt="Mixx by Yas" /> Mixx Wakala Tanzania / Agentes</strong><button class="language-toggle" type="button">SW</button></header>
+  <header><strong style="display:flex;align-items:center;gap:10px;">Moov Money Tchad 🇹🇩 / Espace Agent</strong><button class="language-toggle" type="button">FR</button></header>
   <main>
-    <h1>As minhas candidaturas</h1>
-    <p id="introText">Entre com o nome de utilizador e a senha que recebeu. Apenas candidaturas autorizadas são apresentadas.</p>
+    <h1>Mes Demandes de Prêt</h1>
+    <p id="introText">Connectez-vous avec votre nom d'utilisateur et mot de passe. Seules les demandes autorisées sont affichées.</p>
     <form id="loginForm">
-      <label for="username">Nome de utilizador</label>
+      <label for="username">Nom d'utilisateur</label>
       <input id="username" autocomplete="username" required />
-      <label for="password">Senha</label>
+      <label for="password">Mot de passe</label>
       <input id="password" type="password" autocomplete="current-password" required />
-      <button id="loginButton" type="submit">Entrar</button>
+      <button id="loginButton" type="submit">Se connecter</button>
     </form>
     <form id="otpForm" hidden>
       <p id="otpDelivery" aria-live="polite"></p>
-      <label for="otpCode">Código enviado por email</label>
+      <label for="otpCode">Code envoyé par email</label>
       <input id="otpCode" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" required />
-      <button id="verifyOtpButton" type="submit">Verificar código</button>
+      <button id="verifyOtpButton" type="submit">Vérifier code</button>
     </form>
     <form id="passwordForm" hidden>
-      <label for="currentPassword">Senha temporária atual</label>
+      <label for="currentPassword">Mot de passe temporaire actuel</label>
       <input id="currentPassword" type="password" autocomplete="current-password" required />
-      <label for="newPassword">Nova senha (mínimo 12 caracteres)</label>
+      <label for="newPassword">Nouveau mot de passe (minimum 12 caractères)</label>
       <input id="newPassword" type="password" minlength="12" maxlength="128" autocomplete="new-password" required />
-      <label for="confirmPassword">Confirmar nova senha</label>
+      <label for="confirmPassword">Confirmer le nouveau mot de passe</label>
       <input id="confirmPassword" type="password" minlength="12" maxlength="128" autocomplete="new-password" required />
-      <button id="changePasswordButton" type="submit">Alterar senha</button>
+      <button id="changePasswordButton" type="submit">Changer le mot de passe</button>
     </form>
     <section id="dashboard" hidden>
-      <button id="logoutButton" type="button">Terminar sessão</button>
+      <button id="logoutButton" type="button">Se déconnecter</button>
       <p id="leadCount" class="message" role="status"></p>
     </section>
     <div class="message" id="message" role="status" aria-live="polite"></div>
     <div class="table-wrap" id="leadTable" hidden>
       <table>
-        <thead><tr><th>Data</th><th>Candidato</th><th>Telefone</th><th>Empréstimo</th><th>Valor</th><th>Prazo</th><th>Estágio</th></tr></thead>
+        <thead><tr><th>Date</th><th>Demandeur</th><th>Téléphone</th><th>Prêt</th><th>Montant</th><th>Durée</th><th>Statut</th></tr></thead>
         <tbody id="leadRows"></tbody>
       </table>
     </div>
@@ -78,7 +78,7 @@
     const dashboard = document.getElementById('dashboard');
     const leadTable = document.getElementById('leadTable');
     const rows = document.getElementById('leadRows');
-    const formatter = new Intl.NumberFormat('pt-PT');
+    const formatter = new Intl.NumberFormat('fr-FR');
     const message = document.getElementById('message');
     let otpChallengeToken = '';
 
@@ -90,22 +90,22 @@
     async function loadLeads() {
       const response = await fetch('/api/agent/leads');
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error || 'Não foi possível carregar as candidaturas.');
+      if (!response.ok) throw new Error(data.error || 'Impossible de charger les demandes.');
       rows.replaceChildren();
       for (const lead of data.leads) {
         const row = document.createElement('tr');
         const stage = (lead.status || 'pending').toLowerCase();
-        let stageLabel = 'Pendente';
-        if (stage === 'under_review') stageLabel = 'Em Análise';
-        else if (stage === 'approved') stageLabel = 'Aprovado';
-        else if (stage === 'rejected') stageLabel = 'Rejeitado';
+        let stageLabel = 'En attente';
+        if (stage === 'under_review') stageLabel = 'En Examen';
+        else if (stage === 'approved') stageLabel = 'Approuvé';
+        else if (stage === 'rejected') stageLabel = 'Rejeté';
 
         const values = [
-          new Date(`${lead.created_at}Z`).toLocaleString('pt-PT'),
+          new Date(`${lead.created_at}Z`).toLocaleString('fr-FR'),
           `${lead.first_name} ${lead.last_name}`,
-          String(lead.phone).startsWith('+') ? lead.phone : `+232 ${lead.phone}`,
+          String(lead.phone).startsWith('+') ? lead.phone : `+235 ${lead.phone}`,
           lead.loan_type,
-          `SLE ${formatter.format(lead.loan_amount)}`,
+          `${formatter.format(lead.loan_amount)} FCFA`,
           `${lead.term_months} ${window.t('meses')}`,
           window.t(stageLabel)
         ];
