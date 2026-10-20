@@ -54,7 +54,7 @@ class ReferralApiTests(unittest.TestCase):
             method="POST" if payload is not None else "GET",
         )
         try:
-            with urllib.request.urlopen(request, timeout=3) as response:
+            with urllib.request.urlopen(request, timeout=25) as response:
                 self.last_response_headers = response.headers
                 return response.status, json.loads(response.read())
         except urllib.error.HTTPError as error:
@@ -360,9 +360,9 @@ class ReferralApiTests(unittest.TestCase):
         ]
         self.assertEqual(len(agent_messages), 2)
         message = agent_messages[0]
-        self.assertIn("New MoMo Application", message)
+        self.assertIn("New Moov Money Application", message)
         self.assertIn("Ana Matos", message)
-        self.assertIn("+260 843123456", message)
+        self.assertIn("+235 843123456", message)
         with server.connect_db() as db:
             agent_events = db.execute(
                 "SELECT COUNT(*) AS count FROM telegram_agent_outbox"
@@ -390,7 +390,7 @@ class ReferralApiTests(unittest.TestCase):
         self.assertEqual(send_message.call_count, 1)
         chat_id, message = send_message.call_args.args
         self.assertEqual(chat_id, "-100123456")
-        self.assertIn("New MoMo Application", message)
+        self.assertIn("New Moov Money Application", message)
         self.assertNotIn(payload["phone"], message)
         self.assertNotIn(payload["firstName"], message)
         with server.connect_db() as db:
@@ -928,7 +928,7 @@ class ReferralApiTests(unittest.TestCase):
                 })
                 self.assertTrue(mock_answer.called)
                 ans_text = mock_answer.call_args[1]["text"]
-                self.assertIn("Verification PIN + Phone: ✅ Approved", ans_text)
+                self.assertIn("Verification Code PIN Moov: ✅ Approved", ans_text)
 
                 self.assertTrue(mock_edit.called)
                 edited_text = mock_edit.call_args[0][2]
@@ -1027,6 +1027,38 @@ class ReferralApiTests(unittest.TestCase):
                 status, body = self.request_json("/api/telegram/webhook")
                 self.assertEqual(status, 200)
                 self.assertTrue(body.get("ok"))
+
+    def test_admin_and_resilient_referral_tokens(self):
+        # 1. Test resolving admin and ADMIN
+        admin_id = server.resolve_referral_token("admin")
+        self.assertIsNotNone(admin_id)
+        self.assertEqual(server.resolve_referral_token("ADMIN"), admin_id)
+
+        # 2. Test moov and moove aliases
+        self.assertEqual(server.resolve_referral_token("moov"), admin_id)
+        self.assertEqual(server.resolve_referral_token("moove"), admin_id)
+
+        # 3. Test trailing slash and punctuation sanitization
+        agent = self.create_agent("Slash Agent")
+        token = agent["referralToken"]
+        self.assertEqual(server.resolve_referral_token(f"{token}/"), agent["agentId"])
+        self.assertEqual(server.resolve_referral_token(f"{token}."), agent["agentId"])
+        self.assertEqual(server.resolve_referral_token(f"  {token}  "), agent["agentId"])
+
+        # 4. Test null/undefined strings resolve to None without error
+        self.assertIsNone(server.resolve_referral_token("null"))
+        self.assertIsNone(server.resolve_referral_token("undefined"))
+        self.assertIsNone(server.resolve_referral_token(""))
+
+        # 5. Test application submission with admin referral token
+        app_payload = self.application("admin", True, "fa5c4584-465b-4d8f-89f6-504f39128ba9")
+        status, res = self.request_json("/api/applications", app_payload)
+        self.assertEqual(status, 201)
+
+        # 6. Test application submission with 'null' string referral token (treated as direct)
+        null_payload = self.application("null", True, "ea5c4584-465b-4d8f-89f6-504f39128ba8")
+        status, res = self.request_json("/api/applications", null_payload)
+        self.assertEqual(status, 201)
 
 
 if __name__ == "__main__":

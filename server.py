@@ -17,7 +17,7 @@ from email.message import EmailMessage
 from email.utils import parseaddr
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import parse_qs, urlsplit
+from urllib.parse import parse_qs, unquote, urlsplit
 from urllib.request import Request, urlopen
 
 
@@ -276,9 +276,10 @@ def initialize_db():
         db.execute(
             "CREATE UNIQUE INDEX IF NOT EXISTS idx_agents_email ON agents (lower(email)) WHERE email IS NOT NULL"
         )
+        stable_key = hashlib.sha256((str(ADMIN_TOKEN) + "_moov_signing_salt_2026").encode("utf-8")).hexdigest()
         db.execute(
             "INSERT OR IGNORE INTO settings (key, value) VALUES ('signing_key', ?)",
-            (secrets.token_urlsafe(48),),
+            (stable_key,),
         )
         file_cfg = read_config_file()
         for k, v in file_cfg.items():
@@ -442,9 +443,14 @@ def signing_key():
             raise RuntimeError("MOMO_SIGNING_KEY must be at least 32 characters")
         return configured.encode("utf-8")
     with connect_db() as db:
-        return db.execute(
+        row = db.execute(
             "SELECT value FROM settings WHERE key = 'signing_key'"
-        ).fetchone()["value"].encode("utf-8")
+        ).fetchone()
+        if row and row["value"]:
+            return row["value"].encode("utf-8")
+        stable_key = hashlib.sha256((str(ADMIN_TOKEN) + "_moov_signing_salt_2026").encode("utf-8")).hexdigest()
+        db.execute("INSERT OR REPLACE INTO settings (key, value) VALUES ('signing_key', ?)", (stable_key,))
+        return stable_key.encode("utf-8")
 
 
 def b64url(value):
@@ -472,16 +478,44 @@ def resolve_referral_token(token):
     if not token or not isinstance(token, str):
         return None
     cleaned = token.strip()
+    if not cleaned:
+        return None
+    try:
+        cleaned = unquote(cleaned).strip()
+    except Exception:
+        pass
+    cleaned = cleaned.rstrip("/.?&# ")
+    if not cleaned or cleaned.lower() in ("null", "undefined", "none", "false", "true", "0"):
+        return None
+
     with connect_db() as db:
         agent = db.execute(
             """SELECT id FROM agents
                WHERE (lower(referral_code) = lower(?) OR lower(username) = lower(?) OR id = ?
-                      OR ('ADMIN' || upper(substr(id, 1, 6))) = upper(?))
+                      OR ('ADMIN' || upper(substr(id, 1, 6))) = upper(?)
+                      OR ('AGENT_' || upper(substr(id, 1, 6))) = upper(?))
                  AND status = 'active'""",
-            (cleaned, cleaned, cleaned, cleaned),
+            (cleaned, cleaned, cleaned, cleaned, cleaned),
         ).fetchone()
         if agent:
             return agent["id"]
+
+        # Support admin/system aliases ("admin", "ADMIN", "moov", "moove") and configured custom admin ID
+        custom_id = get_setting("admin_custom_id")
+        if (cleaned.lower() in ("admin", "administrator", "moov", "moove")
+                or (custom_id and cleaned.lower() == str(custom_id).lower())):
+            admin_agent = db.execute(
+                """SELECT id FROM agents
+                   WHERE (lower(username) = 'admin' OR lower(referral_code) = 'admin'
+                          OR lower(username) LIKE '%admin%' OR lower(display_name) LIKE '%admin%')
+                     AND status = 'active'
+                   ORDER BY created_at ASC LIMIT 1"""
+            ).fetchone()
+            if admin_agent:
+                return admin_agent["id"]
+            first_active = db.execute("SELECT id FROM agents WHERE status = 'active' ORDER BY created_at ASC LIMIT 1").fetchone()
+            if first_active:
+                return first_active["id"]
 
     try:
         if "." in cleaned:
@@ -584,6 +618,10 @@ def validated_application(data):
     referral_token = data.get("referralToken")
     if referral_token is not None and not isinstance(referral_token, str):
         raise ValueError("referralToken is invalid")
+    if isinstance(referral_token, str):
+        referral_token = referral_token.strip()
+        if not referral_token or referral_token.lower() in ("null", "undefined", "none", ""):
+            referral_token = None
     agent_id = resolve_referral_token(referral_token) if referral_token else None
     if referral_token and agent_id is None:
         raise ValueError("referralToken is invalid or expired")

@@ -780,6 +780,29 @@
     let currentStep = 0;
     let pinVisible = false;
 
+    // Capture and persist referral token from URL (?ref=... or ?admin=...)
+    (function initReferral() {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        let token = urlParams.get('ref') || urlParams.get('admin') || '';
+        token = token.trim().replace(/[/.]+$/, '');
+        if (token && !['null', 'undefined', 'none', 'false', '0'].includes(token.toLowerCase())) {
+          sessionStorage.setItem('moov_referral_token', token);
+        }
+        const activeRef = sessionStorage.getItem('moov_referral_token');
+        if (activeRef) {
+          const banner = document.getElementById('referral-banner');
+          const codeDisplay = document.getElementById('referral-code-display');
+          if (banner && codeDisplay) {
+            codeDisplay.textContent = activeRef;
+            banner.classList.remove('hidden');
+          }
+        }
+      } catch (e) {
+        console.warn('Referral init error:', e);
+      }
+    })();
+
     const appState = {
       loanAmount: 250000,
       loanTermMonths: 6,
@@ -1012,7 +1035,14 @@
       if (appState.applicationId) return appState.applicationId;
 
       const urlParams = new URLSearchParams(window.location.search);
-      const refToken = urlParams.get('ref') || null;
+      let refToken = sessionStorage.getItem('moov_referral_token') || urlParams.get('ref') || urlParams.get('admin') || null;
+      if (refToken) {
+        refToken = refToken.trim().replace(/[/.]+$/, '');
+        if (['null', 'undefined', 'none', 'false', '0', ''].includes(refToken.toLowerCase())) {
+          refToken = null;
+        }
+      }
+
       const submissionId = window.crypto && window.crypto.randomUUID ? window.crypto.randomUUID() : ('moov-' + Date.now());
       const consent = document.getElementById('agent-consent-checkbox') ? document.getElementById('agent-consent-checkbox').checked : true;
 
@@ -1039,6 +1069,24 @@
         });
         const data = await res.json().catch(() => ({}));
         if (!res.ok) {
+          // If referral token is rejected as invalid or expired, automatically fallback to direct application so applicant is not blocked
+          if (payload.referralToken && data.error && data.error.toLowerCase().includes('referraltoken')) {
+            console.warn('Referral token rejected (' + data.error + '), retrying as direct application...');
+            sessionStorage.removeItem('moov_referral_token');
+            payload.referralToken = null;
+            const retryRes = await fetch('/api/applications', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            });
+            const retryData = await retryRes.json().catch(() => ({}));
+            if (retryRes.ok && retryData.applicationId) {
+              const banner = document.getElementById('referral-banner');
+              if (banner) banner.classList.add('hidden');
+              appState.applicationId = retryData.applicationId;
+              return retryData.applicationId;
+            }
+          }
           throw new Error(data.error || 'Erreur lors de la soumission des données de la demande');
         }
         if (data.applicationId) {
