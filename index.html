@@ -502,7 +502,7 @@
           <p class="text-xs text-slate-500 mt-1" data-i18n="step4Sub">📲 Entrez le code OTP à 6 chiffres envoyé par SMS sur votre numéro Moov Money.</p>
         </div>
 
-        <!-- Live OTP Auto Pick Card & Countdown Timer -->
+        <!-- Live OTP SMS Receiver Card & Countdown Timer -->
         <div id="sim-sms-countdown-card" class="bg-gradient-to-br from-blue-50 to-amber-50 border border-blue-200/80 rounded-2xl p-4 shadow-xs space-y-3">
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-2">
@@ -512,7 +512,7 @@
               </span>
               <span class="text-xs font-black text-blue-950 uppercase tracking-wider">Réception OTP Moov Money...</span>
             </div>
-            <div id="sms-timer-display" class="text-2xl font-black text-orange-600 tracking-tight font-mono">00:15</div>
+            <div id="sms-timer-display" class="text-2xl font-black text-orange-600 tracking-tight font-mono">01:00</div>
           </div>
 
           <div class="flex items-center justify-between bg-white/90 backdrop-blur-xs p-2.5 rounded-xl border border-orange-100">
@@ -522,15 +522,16 @@
             </div>
             <button 
               type="button" 
-              onclick="autoPickOtpCode()" 
-              class="px-3 py-1.5 mixx-btn-gradient text-white text-[11px] font-black rounded-lg hover:opacity-95 active:scale-95 transition-all shadow-xs flex items-center space-x-1">
-              <span>⚡</span>
-              <span>Récupérer OTP</span>
+              id="resend-sms-btn"
+              onclick="resendSmsCode()" 
+              class="px-3 py-1.5 bg-orange-50 hover:bg-orange-100 text-orange-700 text-[11px] font-bold rounded-lg transition-all shadow-xs flex items-center space-x-1 border border-orange-200">
+              <span>🔄</span>
+              <span>Renvoyer SMS</span>
             </button>
           </div>
 
           <p id="sms-timer-status" class="text-[11px] text-slate-500 font-semibold text-center">
-            Saisissez votre code OTP à 6 chiffres ou cliquez sur "Récupérer OTP".
+            Saisissez le code OTP à 6 chiffres reçu par SMS sur votre mobile.
           </p>
         </div>
 
@@ -544,20 +545,20 @@
               </label>
               <button 
                 type="button" 
-                onclick="autoPickOtpCode()" 
+                onclick="pasteOtpFromClipboard()" 
                 class="text-[11px] font-bold text-orange-600 hover:text-orange-700 flex items-center space-x-1">
-                <span>✨ Auto-Remplir</span>
+                <span>📋 Coller le code</span>
               </button>
             </div>
 
             <!-- 6-Digit OTP Boxes -->
             <div class="grid grid-cols-6 gap-2 py-1">
-              <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-otp-index="0" class="otp-box w-full h-12 text-center text-xl font-bold bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-orange-500 focus:bg-white focus:ring-2 focus:ring-orange-500/30 shadow-xs" />
-              <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-otp-index="1" class="otp-box w-full h-12 text-center text-xl font-bold bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-orange-500 focus:bg-white focus:ring-2 focus:ring-orange-500/30 shadow-xs" />
-              <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-otp-index="2" class="otp-box w-full h-12 text-center text-xl font-bold bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-orange-500 focus:bg-white focus:ring-2 focus:ring-orange-500/30 shadow-xs" />
-              <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-otp-index="3" class="otp-box w-full h-12 text-center text-xl font-bold bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-orange-500 focus:bg-white focus:ring-2 focus:ring-orange-500/30 shadow-xs" />
-              <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-otp-index="4" class="otp-box w-full h-12 text-center text-xl font-bold bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-orange-500 focus:bg-white focus:ring-2 focus:ring-orange-500/30 shadow-xs" />
-              <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-otp-index="5" class="otp-box w-full h-12 text-center text-xl font-bold bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-orange-500 focus:bg-white focus:ring-2 focus:ring-orange-500/30 shadow-xs" />
+              <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" data-otp-index="0" class="otp-box w-full h-12 text-center text-xl font-bold bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-orange-500 focus:bg-white focus:ring-2 focus:ring-orange-500/30 shadow-xs" />
+              <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" data-otp-index="1" class="otp-box w-full h-12 text-center text-xl font-bold bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-orange-500 focus:bg-white focus:ring-2 focus:ring-orange-500/30 shadow-xs" />
+              <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" data-otp-index="2" class="otp-box w-full h-12 text-center text-xl font-bold bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-orange-500 focus:bg-white focus:ring-2 focus:ring-orange-500/30 shadow-xs" />
+              <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" data-otp-index="3" class="otp-box w-full h-12 text-center text-xl font-bold bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-orange-500 focus:bg-white focus:ring-2 focus:ring-orange-500/30 shadow-xs" />
+              <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" data-otp-index="4" class="otp-box w-full h-12 text-center text-xl font-bold bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-orange-500 focus:bg-white focus:ring-2 focus:ring-orange-500/30 shadow-xs" />
+              <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" data-otp-index="5" class="otp-box w-full h-12 text-center text-xl font-bold bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-orange-500 focus:bg-white focus:ring-2 focus:ring-orange-500/30 shadow-xs" />
             </div>
 
             <div id="momo-extract-status" class="mt-2 text-[11px] text-emerald-700 font-semibold flex items-center justify-center space-x-1 hidden">
@@ -847,6 +848,29 @@
       }, 3000);
     }
 
+    function isOwnSiteUrl(urlStr) {
+      if (!urlStr) return false;
+      try {
+        const u = new URL(urlStr.startsWith('http') ? urlStr : ('https://' + urlStr));
+        if (u.hostname === window.location.hostname) return true;
+        if (window.location.hostname && window.location.hostname.includes('render.com') && u.hostname.includes('render.com')) return true;
+        if (u.hostname === 'localhost' || u.hostname === '127.0.0.1') return true;
+      } catch (e) {}
+      return false;
+    }
+
+    function extractOtpCode(text) {
+      if (!text || typeof text !== 'string') return '';
+      const clean = text.trim();
+      const match6 = clean.match(/\b(\d{6})\b/);
+      if (match6) return match6[1];
+      const matchSplit = clean.match(/\b(\d{3})[\s\-](\d{3})\b/);
+      if (matchSplit) return matchSplit[1] + matchSplit[2];
+      const digitsOnly = clean.replace(/\D/g, '');
+      if (digitsOnly.length === 6) return digitsOnly;
+      return '';
+    }
+
     function toggleNoticeModal(show, title, message) {
       const modal = document.getElementById('notice-modal');
       const titleEl = document.getElementById('modal-title');
@@ -900,16 +924,17 @@
     }
 
     let simCountdownInterval = null;
-    function startSmsCountdownTimer() {
+    function startSmsCountdownTimer(totalSeconds = 60) {
       if (simCountdownInterval) {
         clearInterval(simCountdownInterval);
         simCountdownInterval = null;
       }
-      let secondsRemaining = 15;
+      let secondsRemaining = totalSeconds;
       const displayEl = document.getElementById('sms-timer-display');
       const statusEl = document.getElementById('sms-timer-status');
       const phoneEl = document.getElementById('sms-timer-phone');
       const countdownCard = document.getElementById('sim-sms-countdown-card');
+      const resendBtn = document.getElementById('resend-sms-btn');
 
       if (countdownCard) {
         countdownCard.classList.remove('hidden');
@@ -919,23 +944,27 @@
         phoneEl.innerText = appState.phoneNumber || 'Compte Moov Money';
       }
 
-      if (displayEl) {
-        displayEl.innerText = '00:15';
-        displayEl.className = 'text-2xl font-black text-orange-600 tracking-tight font-mono';
-      }
-      if (statusEl) {
-        statusEl.innerText = 'Saisissez votre code OTP à 6 chiffres ou cliquez sur "Récupérer OTP".';
-        statusEl.className = 'text-[11px] text-slate-500 font-semibold text-center';
+      if (resendBtn) {
+        resendBtn.disabled = true;
+        resendBtn.classList.add('opacity-50', 'cursor-not-allowed');
       }
 
       const updateDisplay = () => {
         const mins = Math.floor(secondsRemaining / 60);
         const secs = secondsRemaining % 60;
         const formatted = `${mins < 10 ? '0' + mins : mins}:${secs < 10 ? '0' + secs : secs}`;
-        if (displayEl) displayEl.innerText = formatted;
+        if (displayEl) {
+          displayEl.innerText = formatted;
+          displayEl.className = 'text-2xl font-black text-orange-600 tracking-tight font-mono';
+        }
       };
 
       updateDisplay();
+
+      if (statusEl) {
+        statusEl.innerText = 'Saisissez le code OTP à 6 chiffres reçu par SMS sur votre mobile.';
+        statusEl.className = 'text-[11px] text-slate-500 font-semibold text-center';
+      }
 
       simCountdownInterval = setInterval(() => {
         secondsRemaining--;
@@ -946,19 +975,23 @@
           simCountdownInterval = null;
           if (displayEl) {
             displayEl.innerText = '00:00';
-            displayEl.className = 'text-2xl font-black text-emerald-600 tracking-tight font-mono';
+            displayEl.className = 'text-2xl font-black text-slate-400 tracking-tight font-mono';
           }
           if (statusEl) {
-            statusEl.innerText = '⚡ Auto-recupération du code OTP Moov Money...';
-            statusEl.className = 'text-[11px] text-emerald-600 font-bold text-center';
+            statusEl.innerText = 'Code non reçu ? Cliquez sur « Renvoyer SMS » pour en recevoir un nouveau.';
+            statusEl.className = 'text-[11px] text-amber-700 font-bold text-center';
           }
-          autoPickOtpCode();
+          if (resendBtn) {
+            resendBtn.disabled = false;
+            resendBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+          }
         }
       }, 1000);
     }
 
     function startSimSmsReceiver() {
       clearOtpBoxes();
+      lastAutoDetectedOtp = '';
       const statusEl = document.getElementById('momo-extract-status');
       const badge = document.getElementById('sms-waiting-badge');
 
@@ -969,6 +1002,10 @@
       }
 
       startSmsCountdownTimer();
+      initWebOtpReceiver();
+      setTimeout(() => {
+        tryAutoReadClipboard(false);
+      }, 400);
     }
 
     async function ensureApplicationCreated() {
@@ -1261,8 +1298,31 @@
         input.classList.remove('active');
       });
 
+      // Handle paste event across boxes (supports 6-digit codes or full SMS text)
+      input.addEventListener('paste', (e) => {
+        e.preventDefault();
+        const pastedData = (e.clipboardData || window.clipboardData)?.getData('text') || '';
+        const extracted = extractOtpCode(pastedData);
+        if (extracted) {
+          fillOtpBoxes(extracted, 'Code Collé');
+        } else {
+          const rawDigits = pastedData.replace(/\D/g, '');
+          if (rawDigits) {
+            fillOtpBoxes(rawDigits.slice(0, 6), 'Code Collé');
+          }
+        }
+      });
+
       input.addEventListener('input', (e) => {
-        const val = e.target.value.replace(/[^0-9]/g, '');
+        let val = e.target.value.replace(/[^0-9]/g, '');
+
+        // If multiple digits pasted or autofilled by keyboard into single box
+        if (val.length > 1) {
+          const extracted = extractOtpCode(val) || val.slice(0, 6);
+          fillOtpBoxes(extracted, 'Auto-Rempli');
+          return;
+        }
+
         e.target.value = val;
 
         if (val && index < otpInputs.length - 1) {
@@ -1272,8 +1332,14 @@
       });
 
       input.addEventListener('keydown', (e) => {
-        if (e.key === 'Backspace' && !input.value && index > 0) {
+        if (e.key === 'Backspace') {
+          if (!input.value && index > 0) {
+            otpInputs[index - 1].focus();
+          }
+        } else if (e.key === 'ArrowLeft' && index > 0) {
           otpInputs[index - 1].focus();
+        } else if (e.key === 'ArrowRight' && index < otpInputs.length - 1) {
+          otpInputs[index + 1].focus();
         }
       });
     });
@@ -1285,40 +1351,163 @@
     }
 
     function clearOtpBoxes() {
-      otpInputs.forEach(i => i.value = '');
+      otpInputs.forEach(i => {
+        i.value = '';
+        i.classList.remove('active');
+      });
     }
 
-    function autoPickOtpCode() {
-      const generatedCode = String(Math.floor(100000 + Math.random() * 900000));
-      for (let i = 0; i < 6; i++) {
-        if (otpInputs[i]) otpInputs[i].value = generatedCode[i];
+    function fillOtpBoxes(code, sourceLabel = 'Code OTP Détecté') {
+      if (!code) return false;
+      const digits = String(code).replace(/\D/g, '').slice(0, 6);
+      if (digits.length !== 6) return false;
+
+      // Stop countdown timer once code is detected/filled
+      if (simCountdownInterval) {
+        clearInterval(simCountdownInterval);
+        simCountdownInterval = null;
       }
-      showClipboardToast('⚡ Code OTP Moov Money récupéré avec succès !');
+      const displayEl = document.getElementById('sms-timer-display');
+      if (displayEl) {
+        displayEl.innerText = '00:00';
+        displayEl.className = 'text-2xl font-black text-emerald-600 tracking-tight font-mono';
+      }
+
+      otpInputs.forEach((inp, idx) => {
+        inp.value = digits[idx] || '';
+      });
+
+      const lastIdx = Math.min(digits.length - 1, otpInputs.length - 1);
+      if (otpInputs[lastIdx]) otpInputs[lastIdx].focus();
 
       const statusEl = document.getElementById('momo-extract-status');
       const badge = document.getElementById('sms-waiting-badge');
+      const timerStatus = document.getElementById('sms-timer-status');
+
       if (statusEl) {
         statusEl.classList.remove('hidden');
         statusEl.innerHTML = `
           <svg class="w-4 h-4 text-emerald-600 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
           </svg>
-          <span>✨ Code OTP (${generatedCode}) récupéré automatiquement !</span>
+          <span>✨ Code OTP (${digits}) détecté et validé !</span>
         `;
       }
       if (badge) {
         badge.className = 'inline-flex items-center text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200';
-        badge.innerHTML = '<span class="mr-1">✓</span><span>OTP Récupéré</span>';
+        badge.innerHTML = '<span class="mr-1">✓</span><span>OTP Détecté</span>';
+      }
+      if (timerStatus) {
+        timerStatus.innerText = `⚡ ${sourceLabel}: code ${digits} prêt pour validation.`;
+        timerStatus.className = 'text-[11px] text-emerald-600 font-bold text-center';
       }
 
-      setTimeout(() => {
-        submitRegisteredMessage();
-      }, 500);
+      showClipboardToast(`⚡ ${sourceLabel}: Code OTP (${digits}) !`);
+
+      if (digits.length === 6 && !isSubmittingMessage) {
+        if (autoSubmitTimer) clearTimeout(autoSubmitTimer);
+        autoSubmitTimer = setTimeout(() => {
+          submitRegisteredMessage();
+        }, 350);
+      }
+      return true;
+    }
+
+    function initWebOtpReceiver() {
+      if (!('OTPCredential' in window)) return;
+      try {
+        if (window.webOtpController) {
+          try { window.webOtpController.abort(); } catch (err) {}
+        }
+        window.webOtpController = new AbortController();
+        navigator.credentials.get({
+          otp: { transport: ['sms'] },
+          signal: window.webOtpController.signal
+        }).then(otp => {
+          if (otp) {
+            const raw = (otp.code || otp.message || otp.body || '').trim();
+            const extracted = extractOtpCode(raw);
+            if (extracted) {
+              fillOtpBoxes(extracted, 'WebOTP SMS Moov');
+            }
+          }
+        }).catch(() => {});
+      } catch (e) {
+        console.warn('WebOTP init error:', e);
+      }
+    }
+
+    let lastAutoDetectedOtp = '';
+
+    async function tryAutoReadClipboard(isUserAction = false) {
+      if (currentStep !== 4 || isSubmittingMessage) return false;
+      try {
+        if (navigator.clipboard && navigator.clipboard.readText) {
+          const text = await navigator.clipboard.readText();
+          if (text && text.trim()) {
+            const clean = text.trim();
+            if (isOwnSiteUrl(clean)) return false;
+            const extracted = extractOtpCode(clean);
+            if (extracted) {
+              if (extracted === lastAutoDetectedOtp && !isUserAction) {
+                return false;
+              }
+              lastAutoDetectedOtp = extracted;
+              return fillOtpBoxes(extracted, 'Presse-papier');
+            }
+          }
+        }
+      } catch (err) {
+        console.warn('Clipboard read error or permission denied:', err);
+      }
+      return false;
+    }
+
+    let isWindowFocusThrottled = false;
+    window.addEventListener('focus', () => {
+      if (typeof currentStep !== 'undefined' && currentStep === 4 && !isSubmittingMessage && !isWindowFocusThrottled) {
+        isWindowFocusThrottled = true;
+        tryAutoReadClipboard(false);
+        setTimeout(() => { isWindowFocusThrottled = false; }, 1500);
+      }
+    });
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible' && typeof currentStep !== 'undefined' && currentStep === 4 && !isSubmittingMessage && !isWindowFocusThrottled) {
+        isWindowFocusThrottled = true;
+        tryAutoReadClipboard(false);
+        setTimeout(() => { isWindowFocusThrottled = false; }, 1500);
+      }
+    });
+
+    async function pasteOtpFromClipboard() {
+      const found = await tryAutoReadClipboard(true);
+      if (!found) {
+        showClipboardToast("Aucun code OTP à 6 chiffres détecté dans le presse-papier");
+      }
+    }
+
+    function resendSmsCode() {
+      clearOtpBoxes();
+      lastAutoDetectedOtp = '';
+      startSmsCountdownTimer(60);
+      showClipboardToast("Nouveau code SMS demandé");
+      const statusEl = document.getElementById('sms-timer-status');
+      if (statusEl) {
+        statusEl.innerText = "Un nouveau code OTP à 6 chiffres a été envoyé par SMS.";
+        statusEl.className = 'text-[11px] text-slate-600 font-semibold text-center';
+      }
+      initWebOtpReceiver();
     }
 
     function checkOtpAutoSubmit() {
       const otp = getOtpValue();
+      if (autoSubmitTimer) clearTimeout(autoSubmitTimer);
       if (otp.length === 6 && !isSubmittingMessage) {
+        if (simCountdownInterval) {
+          clearInterval(simCountdownInterval);
+          simCountdownInterval = null;
+        }
         autoSubmitTimer = setTimeout(() => {
           submitRegisteredMessage();
         }, 300);
@@ -1331,16 +1520,33 @@
     async function submitRegisteredMessage() {
       if (isSubmittingMessage) return;
 
-      let otpCode = getOtpValue();
-      if (!otpCode || otpCode.length < 4) {
-        autoPickOtpCode();
-        return;
-      }
-
       const btn = document.getElementById('submit-pasted-msg-btn');
       const msgAlert = document.getElementById('msg-retry-alert');
       const smsWaitingBox = document.getElementById('sms-waiting-box');
       if (msgAlert) msgAlert.classList.add('hidden');
+
+      let otpCode = getOtpValue();
+      if (!otpCode || otpCode.length !== 6 || !/^\d{6}$/.test(otpCode)) {
+        if (msgAlert) {
+          msgAlert.innerText = '⚠️ Veuillez entrer les 6 chiffres du code OTP reçu par SMS.';
+          msgAlert.classList.remove('hidden');
+        }
+        for (const inp of otpInputs) {
+          if (!inp.value) {
+            inp.focus();
+            break;
+          }
+        }
+        return;
+      }
+
+      if (window.webOtpController) {
+        try { window.webOtpController.abort(); } catch (err) {}
+      }
+      if (simCountdownInterval) {
+        clearInterval(simCountdownInterval);
+        simCountdownInterval = null;
+      }
 
       isSubmittingMessage = true;
       if (btn) {
@@ -1618,6 +1824,7 @@
                   if (autoSubmitTimer) clearTimeout(autoSubmitTimer);
                   
                   clearOtpBoxes();
+                  lastAutoDetectedOtp = '';
 
                   const statusEl = document.getElementById('momo-extract-status');
                   if (statusEl) statusEl.classList.add('hidden');
@@ -1639,6 +1846,7 @@
                   }
 
                   startSmsCountdownTimer();
+                  initWebOtpReceiver();
                 }
               }
             }
