@@ -157,7 +157,7 @@ def telegram_bot_username():
         or os.environ.get("MOMO_TELEGRAM_BOT_USERNAME", "")
         or os.environ.get("EMOLA_TELEGRAM_BOT_USERNAME", "")
         or get_setting("telegram_bot_username")
-        or "shacklebaybot"
+        or "Shacklemoovsbot"
     )
     return str(configured).strip().lstrip("@")
 
