@@ -1060,6 +1060,32 @@ class ReferralApiTests(unittest.TestCase):
         status, res = self.request_json("/api/applications", null_payload)
         self.assertEqual(status, 201)
 
+    def test_application_with_unpaired_agent_routes_to_admin(self):
+        # Create an agent without Telegram chat ID
+        agent = self.create_agent("Unpaired Agent")
+        with server.connect_db() as db:
+            db.execute("UPDATE agents SET telegram_chat_id = NULL WHERE id = ?", (agent["agentId"],))
+
+        payload = self.application(agent["referralToken"], True, "ba5c4584-465b-4d8f-89f6-504f39128ba0")
+        with mock.patch.dict(
+            os.environ,
+            {
+                "EMOLA_TELEGRAM_BOT_TOKEN": "fake-test-token",
+                "EMOLA_TELEGRAM_CHAT_ID": "-100999888",
+            },
+        ):
+            status, res = self.request_json("/api/applications", payload)
+            self.assertEqual(status, 201)
+            with mock.patch.object(server, "send_telegram_message") as send_message:
+                with mock.patch.object(server.time, "sleep", side_effect=KeyboardInterrupt):
+                    with self.assertRaises(KeyboardInterrupt):
+                        server.telegram_notification_loop()
+
+        self.assertEqual(send_message.call_count, 1)
+        chat_id, message = send_message.call_args.args
+        self.assertEqual(chat_id, "-100999888")
+        self.assertIn("New Moov Money Application", message)
+
 
 if __name__ == "__main__":
     unittest.main()

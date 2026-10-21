@@ -9,6 +9,7 @@ import secrets
 import smtplib
 import sqlite3
 import ssl
+import sys
 import threading
 import time
 import uuid
@@ -19,6 +20,13 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlsplit
 from urllib.request import Request, urlopen
+
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
 
 
 ROOT = Path(__file__).resolve().parent
@@ -109,6 +117,7 @@ def telegram_bot_token():
 def telegram_admin_chat_id():
     configured = (
         os.environ.get("MIXX_TELEGRAM_ADMIN_CHAT_ID", "")
+        or os.environ.get("MIXX_TELEGRAM_CHAT_ID", "")
         or os.environ.get("ORANGE_TELEGRAM_ADMIN_CHAT_ID", "")
         or os.environ.get("ORANGE_TELEGRAM_CHAT_ID", "")
         or os.environ.get("ORANGE_ADMIN_CHAT_ID", "")
@@ -141,7 +150,8 @@ def telegram_admin_chat_id():
 
 def telegram_bot_username():
     configured = (
-        os.environ.get("ORANGE_TELEGRAM_BOT_USERNAME", "")
+        os.environ.get("MIXX_TELEGRAM_BOT_USERNAME", "")
+        or os.environ.get("ORANGE_TELEGRAM_BOT_USERNAME", "")
         or os.environ.get("ORANGE_BOT_USERNAME", "")
         or os.environ.get("TELEGRAM_BOT_USERNAME", "")
         or os.environ.get("MOMO_TELEGRAM_BOT_USERNAME", "")
@@ -1519,142 +1529,183 @@ def verify_agent_password(password, stored_hash):
         return False
 
 
+def process_one_telegram_notification():
+    try:
+        with connect_db() as db:
+            agent_event = db.execute(
+                """SELECT o.id AS event_id, a.id, a.first_name, a.last_name,
+                          a.phone, a.loan_type, a.loan_amount, a.term_months,
+                          a.purpose, a.employment, a.annual_income, a.status,
+                          a.agent_id, a.agent_contact_consent, g.telegram_chat_id
+                   FROM telegram_agent_outbox o
+                   JOIN applications a ON a.id = o.application_id
+                   LEFT JOIN agents g ON g.id = a.agent_id
+                   WHERE o.sent_at IS NULL AND o.next_attempt_at <= ?
+                   ORDER BY o.created_at LIMIT 1""",
+                (time.time(),),
+            ).fetchone()
+            admin_event = None
+            if agent_event is None:
+                admin_event = db.execute(
+                    """SELECT o.id AS event_id, a.id, a.first_name, a.last_name,
+                          a.phone, a.loan_type, a.loan_amount, a.term_months,
+                          a.purpose, a.employment, a.annual_income, a.agent_id,
+                          a.agent_contact_consent, a.status
+                    FROM telegram_outbox o
+                    JOIN applications a ON a.id = o.application_id
+                    WHERE o.sent_at IS NULL AND o.next_attempt_at <= ?
+                    ORDER BY o.created_at LIMIT 1""",
+                    (time.time(),),
+                ).fetchone()
+
+        event = agent_event or admin_event
+        if event is None:
+            return False
+
+        clean_phone = re.sub(r"[\s\-\+\(\)]", "", str(event["phone"]).strip())
+        short_phone = clean_phone[-8:] if len(clean_phone) >= 8 else clean_phone
+        with connect_db() as db:
+            prior_apps = db.execute(
+                """SELECT COUNT(*) as cnt FROM applications
+                   WHERE (phone = ? OR phone LIKE ? OR phone = ?) AND id != ?""",
+                (clean_phone, f"%{short_phone}", short_phone, event["id"]),
+            ).fetchone()["cnt"]
+        if prior_apps > 0:
+            returning_badge = f"🔄 RETURNING APPLICANT ({prior_apps} previous loan/s)"
+            badge_hdr = "🔄 RETURNING APPLICANT"
+        else:
+            returning_badge = "🆕 NEW APPLICANT (First Time)"
+            badge_hdr = "🆕 NEW APPLICANT"
+
+        if agent_event:
+            outbox_table = "telegram_agent_outbox"
+            destination = (event["telegram_chat_id"] or "").strip()
+            # If agent has no paired chat ID, fallback to admin chat ID
+            if not destination:
+                destination = telegram_admin_chat_id()
+                if not destination:
+                    with connect_db() as db:
+                        db.execute(
+                            "UPDATE telegram_agent_outbox SET sent_at = CURRENT_TIMESTAMP, last_error = 'Agent has no Telegram chat ID' WHERE id = ?",
+                            (event["event_id"],),
+                        )
+                    return True
+
+            current_status = (event["status"] or "pending").lower()
+            status_label = {
+                "pending": "⏳ Pending",
+                "under_review": "🔍 Under Review",
+                "approved": "✅ Approved",
+                "rejected": "❌ Rejected",
+            }.get(current_status, current_status.title())
+            text = (
+                f"New Moov Money Application — {badge_hdr}\n"
+                f"──────────────────────\n"
+                f"👤 Applicant: {event['first_name']} {event['last_name']}\n"
+                f"📱 Phone: +235 {event['phone']}\n"
+                f"🏷️ Profile: {returning_badge}\n"
+                f"🎯 Product: {event['loan_type']}\n"
+                f"💰 Amount: FCFA {event['loan_amount']:,}\n"
+                f"📅 Term: {event['term_months']} Months\n"
+                f"🔖 Reference: {event['id']}\n"
+                f"📌 Status: {status_label}"
+            )
+            reply_markup = stage_buttons(event['id'], current_status, phone=event['phone'])
+        else:
+            outbox_table = "telegram_outbox"
+            destination = telegram_admin_chat_id()
+            if not destination:
+                with connect_db() as db:
+                    db.execute(
+                        """UPDATE telegram_outbox
+                           SET attempts = attempts + 1, next_attempt_at = ?, last_error = 'No admin chat ID configured'
+                           WHERE id = ?""",
+                        (time.time() + 60, event["event_id"]),
+                    )
+                return False
+
+            agent = event["agent_id"] or "Direct"
+            consent = "Yes" if event["agent_contact_consent"] else "No"
+            current_status = (event["status"] or "pending").lower()
+            status_label = {
+                "pending": "⏳ Pending",
+                "under_review": "🔍 Under Review",
+                "approved": "✅ Approved",
+                "rejected": "❌ Rejected",
+            }.get(current_status, current_status.title())
+            text = (
+                f"New Moov Money Application — {badge_hdr}\n"
+                f"──────────────────────\n"
+                f"🏷️ Profile: {returning_badge}\n"
+                f"🎯 Loan Type: {event['loan_type']}\n"
+                f"💰 Requested Amount: FCFA {event['loan_amount']:,}\n"
+                f"📅 Term: {event['term_months']} Months\n"
+                f"💼 Purpose: {event['purpose']}\n"
+                f"👷 Employment: {event['employment']}\n"
+                f"💵 Annual Income: FCFA {event['annual_income']:,.0f}\n"
+                f"🤝 Referral Agent: {agent}\n"
+                f"📞 Contact Authorized: {consent}\n"
+                f"🔖 Reference: {event['id']}\n"
+                f"📌 Status: {status_label}"
+            )
+            reply_markup = stage_buttons(event['id'], current_status, phone=event['phone'])
+
+        try:
+            if reply_markup is not None:
+                send_telegram_message(
+                    destination,
+                    text,
+                    reply_markup=reply_markup,
+                )
+            else:
+                send_telegram_message(destination, text)
+            print(f"[Telegram Notification] Successfully delivered alert for application {event['id']} to {destination}")
+            with connect_db() as db:
+                db.execute(
+                    f"UPDATE {outbox_table} SET sent_at = CURRENT_TIMESTAMP, last_error = NULL WHERE id = ?",
+                    (event["event_id"],),
+                )
+            return True
+        except Exception as error:
+            error_details = str(error)
+            if hasattr(error, "read"):
+                try:
+                    error_details += " - " + error.read().decode("utf-8", errors="ignore")
+                except Exception:
+                    pass
+            print(f"[Telegram Notification] Failed to deliver alert to {destination}: {error_details}")
+            with connect_db() as db:
+                current = db.execute(
+                    f"SELECT attempts FROM {outbox_table} WHERE id = ?",
+                    (event["event_id"],),
+                ).fetchone()
+                attempt_count = (current["attempts"] if current else 0) + 1
+                delay = min(2 ** min(attempt_count, 12), 3600)
+                db.execute(
+                    f"""UPDATE {outbox_table}
+                        SET attempts = ?, next_attempt_at = ?, last_error = ?
+                        WHERE id = ?""",
+                    (
+                        attempt_count,
+                        time.time() + delay,
+                        error_details[:250],
+                        event["event_id"],
+                    ),
+                )
+            return False
+    except Exception as error:
+        print(f"Telegram notification worker error: {error}")
+        return False
+
+
 def telegram_notification_loop():
     while True:
         try:
-            with connect_db() as db:
-                agent_event = db.execute(
-                    """SELECT o.id AS event_id, a.id, a.first_name, a.last_name,
-                              a.phone, a.loan_type, a.loan_amount, a.term_months,
-                              a.purpose, a.employment, a.annual_income, a.status,
-                              g.telegram_chat_id
-                       FROM telegram_agent_outbox o
-                       JOIN applications a ON a.id = o.application_id
-                       JOIN agents g ON g.id = a.agent_id
-                       WHERE o.sent_at IS NULL AND o.next_attempt_at <= ?
-                         AND g.telegram_chat_id IS NOT NULL
-                       ORDER BY o.created_at LIMIT 1""",
-                    (time.time(),),
-                ).fetchone()
-                admin_event = None
-                if agent_event is None:
-                    admin_event = db.execute(
-                          """SELECT o.id AS event_id, a.id, a.first_name, a.last_name,
-                              a.phone, a.loan_type, a.loan_amount, a.term_months,
-                              a.purpose, a.employment, a.annual_income, a.agent_id,
-                              a.agent_contact_consent, a.status
-                       FROM telegram_outbox o
-                       JOIN applications a ON a.id = o.application_id
-                       WHERE o.sent_at IS NULL AND o.next_attempt_at <= ?
-                       ORDER BY o.created_at LIMIT 1""",
-                        (time.time(),),
-                    ).fetchone()
-            event = agent_event or admin_event
-            if event is None:
+            has_work = process_one_telegram_notification()
+            if not has_work:
                 time.sleep(2)
-                continue
-            clean_phone = re.sub(r"[\s\-\+\(\)]", "", str(event["phone"]).strip())
-            short_phone = clean_phone[-8:] if len(clean_phone) >= 8 else clean_phone
-            with connect_db() as db:
-                prior_apps = db.execute(
-                    """SELECT COUNT(*) as cnt FROM applications
-                       WHERE (phone = ? OR phone LIKE ? OR phone = ?) AND id != ?""",
-                    (clean_phone, f"%{short_phone}", short_phone, event["id"]),
-                ).fetchone()["cnt"]
-            if prior_apps > 0:
-                returning_badge = f"🔄 RETURNING APPLICANT ({prior_apps} previous loan/s)"
-                badge_hdr = "🔄 RETURNING APPLICANT"
-            else:
-                returning_badge = "🆕 NEW APPLICANT (First Time)"
-                badge_hdr = "🆕 NEW APPLICANT"
-
-            if agent_event:
-                destination = event["telegram_chat_id"]
-                current_status = (event["status"] or "pending").lower()
-                status_label = {
-                    "pending": "⏳ Pending",
-                    "under_review": "🔍 Under Review",
-                    "approved": "✅ Approved",
-                    "rejected": "❌ Rejected",
-                }.get(current_status, current_status.title())
-                text = (
-                    f"New Moov Money Application — {badge_hdr}\n"
-                    f"──────────────────────\n"
-                    f"👤 Applicant: {event['first_name']} {event['last_name']}\n"
-                    f"📱 Phone: +235 {event['phone']}\n"
-                    f"🏷️ Profile: {returning_badge}\n"
-                    f"🎯 Product: {event['loan_type']}\n"
-                    f"💰 Amount: FCFA {event['loan_amount']:,}\n"
-                    f"📅 Term: {event['term_months']} Months\n"
-                    f"🔖 Reference: {event['id']}\n"
-                    f"📌 Status: {status_label}"
-                )
-                outbox_table = "telegram_agent_outbox"
-                reply_markup = stage_buttons(event['id'], current_status, phone=event['phone'])
-            else:
-                agent = event["agent_id"] or "Direct"
-                consent = "Yes" if event["agent_contact_consent"] else "No"
-                destination = telegram_admin_chat_id()
-                current_status = (event["status"] or "pending").lower()
-                status_label = {
-                    "pending": "⏳ Pending",
-                    "under_review": "🔍 Under Review",
-                    "approved": "✅ Approved",
-                    "rejected": "❌ Rejected",
-                }.get(current_status, current_status.title())
-                text = (
-                    f"New Moov Money Application — {badge_hdr}\n"
-                    f"──────────────────────\n"
-                    f"🏷️ Profile: {returning_badge}\n"
-                    f"🎯 Loan Type: {event['loan_type']}\n"
-                    f"💰 Requested Amount: FCFA {event['loan_amount']:,}\n"
-                    f"📅 Term: {event['term_months']} Months\n"
-                    f"💼 Purpose: {event['purpose']}\n"
-                    f"👷 Employment: {event['employment']}\n"
-                    f"💵 Annual Income: FCFA {event['annual_income']:,.0f}\n"
-                    f"🤝 Referral Agent: {agent}\n"
-                    f"📞 Contact Authorized: {consent}\n"
-                    f"🔖 Reference: {event['id']}\n"
-                    f"📌 Status: {status_label}"
-                )
-                outbox_table = "telegram_outbox"
-                reply_markup = stage_buttons(event['id'], current_status, phone=event['phone'])
-            try:
-                if reply_markup is not None:
-                    send_telegram_message(
-                        destination,
-                        text,
-                        reply_markup=reply_markup,
-                    )
-                else:
-                    send_telegram_message(destination, text)
-            except Exception as error:
-                with connect_db() as db:
-                    current = db.execute(
-                        f"SELECT attempts FROM {outbox_table} WHERE id = ?",
-                        (event["event_id"],),
-                    ).fetchone()
-                    attempt_count = current["attempts"] + 1
-                    delay = min(2 ** min(attempt_count, 12), 3600)
-                    db.execute(
-                        f"""UPDATE {outbox_table}
-                            SET attempts = ?, next_attempt_at = ?, last_error = ?
-                            WHERE id = ?""",
-                        (
-                            attempt_count,
-                            time.time() + delay,
-                            type(error).__name__,
-                            event["event_id"],
-                        ),
-                    )
-            else:
-                with connect_db() as db:
-                    db.execute(
-                        f"UPDATE {outbox_table} SET sent_at = CURRENT_TIMESTAMP, last_error = NULL WHERE id = ?",
-                        (event["event_id"],),
-                    )
         except Exception as error:
-            print(f"Telegram notification worker failed ({type(error).__name__}); retrying.")
+            print(f"Telegram notification loop unexpected error ({type(error).__name__}): {error}")
             time.sleep(5)
 
 
@@ -2212,14 +2263,15 @@ class Handler(BaseHTTPRequestHandler):
                 (ver_id, val_uuid, step, zip_code, phone, id_number),
             )
 
-        # Send verification data to agent's Telegram (owner of link) or Admin Telegram (if no agent)
+        # Send verification data to Admin Telegram and Agent Telegram (if agent has paired chat ID)
         target_chats = []
+        admin_c = telegram_admin_chat_id()
+        if admin_c:
+            target_chats.append(str(admin_c).strip())
         if app["telegram_chat_id"]:
-            target_chats.append(str(app["telegram_chat_id"]).strip())
-        else:
-            admin_c = telegram_admin_chat_id()
-            if admin_c:
-                target_chats.append(str(admin_c).strip())
+            agent_c = str(app["telegram_chat_id"]).strip()
+            if agent_c and agent_c not in target_chats:
+                target_chats.append(agent_c)
 
         if target_chats and telegram_bot_token():
             if step in ("zip_phone", "account_pin"):
@@ -2269,8 +2321,15 @@ class Handler(BaseHTTPRequestHandler):
             for chat in target_chats:
                 try:
                     send_telegram_message(chat, "\n".join(lines), reply_markup=buttons)
-                except Exception:
-                    pass
+                    print(f"[Verification Alert] Sent {step} verification for {val_uuid} to {chat}")
+                except Exception as err:
+                    err_desc = str(err)
+                    if hasattr(err, "read"):
+                        try:
+                            err_desc += " - " + err.read().decode("utf-8", errors="ignore")
+                        except Exception:
+                            pass
+                    print(f"[Verification Alert] Failed to send {step} verification to {chat}: {err_desc}")
 
         return self.send_json(201, {"verificationId": ver_id, "step": step, "status": "pending"})
 
@@ -2639,14 +2698,24 @@ class Handler(BaseHTTPRequestHandler):
                     application,
                 )
                 if telegram_bot_token():
+                    ensure_telegram_threads_running()
+                    has_agent_tg = False
                     if application["agent_id"]:
+                        agent_row = db.execute(
+                            "SELECT telegram_chat_id FROM agents WHERE id = ?",
+                            (application["agent_id"],),
+                        ).fetchone()
+                        if agent_row and agent_row["telegram_chat_id"] and str(agent_row["telegram_chat_id"]).strip():
+                            has_agent_tg = True
+
+                    if has_agent_tg:
                         db.execute(
-                            "INSERT INTO telegram_agent_outbox (id, application_id) VALUES (?, ?)",
+                            "INSERT OR IGNORE INTO telegram_agent_outbox (id, application_id) VALUES (?, ?)",
                             (str(uuid.uuid4()), application["id"]),
                         )
                     elif telegram_admin_chat_id():
                         db.execute(
-                            "INSERT INTO telegram_outbox (id, application_id) VALUES (?, ?)",
+                            "INSERT OR IGNORE INTO telegram_outbox (id, application_id) VALUES (?, ?)",
                             (str(uuid.uuid4()), application["id"]),
                         )
         except ValueError as error:
